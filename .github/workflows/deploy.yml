@@ -36,14 +36,6 @@ jobs:
           distribution: temurin
           java-version: 17
 
-#      - name: mysql 연결하기
-#        uses: mirromutth/mysql-action@v1.1
-#        with:
-#          host port: 3306
-#          container port: 3306
-#          mysql database: 'BallaDream'
-#          mysql root password: ${{ secrets.DB_PASSWORD }}
-
       - name: 깃허브 파일 확인하기
         run: |
           cd ./src/main/resources
