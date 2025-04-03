@@ -8,14 +8,15 @@ jobs:
   login:
     runs-on: ubuntu-latest
     services:
-#      mysql:
-#        image: mysql:8.0
-#        env:
-#          MYSQL_DATABASE: BallaDream
-#          MYSQL_ROOT_PASSWORD: ${{ secrets.DB_PASSWORD }}
-#        ports:
-#          - 3306:3306
-#        options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
+      mysql:
+        image: mysql:8.0
+        env:
+          MYSQL_DATABASE: BallaDream
+          MYSQL_ROOT_PASSWORD: ${{ secrets.DB_PASSWORD }}
+        ports:
+          - 33306:3306
+        options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
+
       redis:
         image: redis:7.2
         ports:
@@ -35,13 +36,13 @@ jobs:
           distribution: temurin
           java-version: 17
 
-      - name: mysql 연결하기
-        uses: mirromutth/mysql-action@v1.1
-        with:
-          host port: 3306
-          container port: 3306
-          mysql database: 'BallaDream'
-          mysql root password: ${{ secrets.DB_PASSWORD }}
+#      - name: mysql 연결하기
+#        uses: mirromutth/mysql-action@v1.1
+#        with:
+#          host port: 3306
+#          container port: 3306
+#          mysql database: 'BallaDream'
+#          mysql root password: ${{ secrets.DB_PASSWORD }}
 
       - name: 깃허브 파일 확인하기
         run: |
@@ -53,40 +54,40 @@ jobs:
       - name: gradle 권한 설정
         run: chmod +x ./gradlew
 
-      - name: 테스트 및 빌드하기
-        run: ./gradlew clean build
-
-      - name: Log in to Docker Hub
-        uses: docker/login-action@f4ef78c080cd8ba55a85445d5b36e214a81df20a
-        with:
-          username: ${{ secrets.DOCKER_USERNAME }}
-          password: ${{ secrets.DOCKER_PASSWORD }}
-
-      - name: Extract metadata (tags, labels) for Docker
-        id: meta
-        uses: docker/metadata-action@9ec57ed1fcdbf14dcef7dfbe97b2010124a938b7
-        with:
-#          images: jaeker/docker-prt
-          images: jaeker/balladream
-
-      - name: Build and push Docker image
-        id: push
-        uses: docker/build-push-action@3b5e8027fcad23fda98b2e3ac259d8d67585f671
-        with:
-          context: .
-          file: ./Dockerfile
-          push: true
-          tags: ${{ steps.meta.outputs.tags }}
-          labels: ${{ steps.meta.outputs.labels }}
-
-      - name: SSH로 EC2에 접속하기
-        uses: appleboy/ssh-action@v1.0.3
-        with:
-          host: ${{ secrets.EC2_HOST }}
-          username: ${{ secrets.EC2_USERNAME }}
-          key: ${{ secrets.EC2_PRIVATE_KEY }}
-          script_stop: true
-          script: |
-            docker compose down
-            docker compose pull
-            docker compose up -d --build
+#      - name: 테스트 및 빌드하기
+#        run: ./gradlew clean build
+#
+#      - name: Log in to Docker Hub
+#        uses: docker/login-action@f4ef78c080cd8ba55a85445d5b36e214a81df20a
+#        with:
+#          username: ${{ secrets.DOCKER_USERNAME }}
+#          password: ${{ secrets.DOCKER_PASSWORD }}
+#
+#      - name: Extract metadata (tags, labels) for Docker
+#        id: meta
+#        uses: docker/metadata-action@9ec57ed1fcdbf14dcef7dfbe97b2010124a938b7
+#        with:
+##          images: jaeker/docker-prt
+#          images: jaeker/balladream
+#
+#      - name: Build and push Docker image
+#        id: push
+#        uses: docker/build-push-action@3b5e8027fcad23fda98b2e3ac259d8d67585f671
+#        with:
+#          context: .
+#          file: ./Dockerfile
+#          push: true
+#          tags: ${{ steps.meta.outputs.tags }}
+#          labels: ${{ steps.meta.outputs.labels }}
+#
+#      - name: SSH로 EC2에 접속하기
+#        uses: appleboy/ssh-action@v1.0.3
+#        with:
+#          host: ${{ secrets.EC2_HOST }}
+#          username: ${{ secrets.EC2_USERNAME }}
+#          key: ${{ secrets.EC2_PRIVATE_KEY }}
+#          script_stop: true
+#          script: |
+#            docker compose down
+#            docker compose pull
+#            docker compose up -d --build
