@@ -14,7 +14,7 @@ jobs:
           MYSQL_DATABASE: BallaDream
           MYSQL_ROOT_PASSWORD: ${{ secrets.DB_PASSWORD }}
         ports:
-          - 33306:3306
+          - 3306:3306
         options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
 
       redis:
@@ -48,7 +48,7 @@ jobs:
         run: |
           cd ./src/main/resources
 
-      - name: application.yml 파일 만들기1
+      - name: application.yml 파일 만들기
         run: echo "${{ secrets.APPLICATION_PROPERTIES }}" > ./src/main/resources/application.yml
 
       - name: gradle 권한 설정
