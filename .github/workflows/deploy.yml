@@ -17,7 +17,7 @@ jobs:
           distribution: temurin
           java-version: 17
 
-      - name: application.yml 파일 만들기
+      - name: application.yml 파일 만들기1
         run: echo "${{ secrets.APPLICATION_PROPERTIES }}" > ./src/main/resources/application.yml
 
       - name: gradle 권한 설정
