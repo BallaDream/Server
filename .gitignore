@@ -7,6 +7,8 @@ build/
 
 # yml
 application.yml
+aws.yml
+compose.yml
 
 ### STS ###
 .apt_generated
