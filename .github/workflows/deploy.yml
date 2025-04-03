@@ -8,15 +8,14 @@ jobs:
   login:
     runs-on: ubuntu-latest
     services:
-      mysql:
-        image: mysql:8.0
-        env:
-          MYSQL_DATABASE: BallaDream
-          MYSQL_ROOT_PASSWORD: ${{ secrets.DB_PASSWORD }}
-        ports:
-          - 3306:3306
-        options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
-
+#      mysql:
+#        image: mysql:8.0
+#        env:
+#          MYSQL_DATABASE: BallaDream
+#          MYSQL_ROOT_PASSWORD: ${{ secrets.DB_PASSWORD }}
+#        ports:
+#          - 3306:3306
+#        options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
       redis:
         image: redis:7.2
         ports:
@@ -35,6 +34,14 @@ jobs:
         with:
           distribution: temurin
           java-version: 17
+
+      - name: mysql 연결하기
+        uses: mirromutth/mysql-action@v1.1
+        with:
+          host port: 3306
+          container port: 3306
+          mysql database: 'BallaDream'
+          mysql root password: ${{ secrets.DB_PASSWORD }}
 
       - name: 깃허브 파일 확인하기
         run: |
