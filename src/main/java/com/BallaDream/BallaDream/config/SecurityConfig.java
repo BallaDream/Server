@@ -3,6 +3,8 @@ package com.BallaDream.BallaDream.config;
 import com.BallaDream.BallaDream.common.RedisUtil;
 import com.BallaDream.BallaDream.jwt.*;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -16,6 +18,7 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.authentication.logout.LogoutFilter;
 
+@Slf4j
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
@@ -48,7 +51,7 @@ public class SecurityConfig {
                 .httpBasic((auth) -> auth.disable())
 
                 .authorizeHttpRequests((auth) -> auth
-                        .requestMatchers("/login", "/open", "/join", "/reissue").permitAll()
+                        .requestMatchers("/login", "/open", "/join", "/reissue", "/").permitAll()
                         .anyRequest().authenticated())
 
                 .exceptionHandling(ex -> ex
@@ -56,7 +59,8 @@ public class SecurityConfig {
                         .authenticationEntryPoint(jwtAuthenticationEntryPoint))
                 .addFilterBefore(new CustomLogoutFilter(jwtUtil, redisUtil), LogoutFilter.class)
                 .addFilterBefore(new JWTFilter(jwtUtil), LoginFilter.class)
-                .addFilterAt(new LoginFilter(authenticationManager(authenticationConfiguration), redisUtil, jwtUtil), UsernamePasswordAuthenticationFilter.class)
+                .addFilterAt(new LoginFilter(authenticationManager(authenticationConfiguration), redisUtil, jwtUtil),
+                        UsernamePasswordAuthenticationFilter.class)
 
                 .sessionManagement((session) -> session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS));

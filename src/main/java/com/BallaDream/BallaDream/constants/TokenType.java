@@ -1,5 +1,7 @@
 package com.BallaDream.BallaDream.constants;
 
+import org.springframework.beans.factory.annotation.Value;
+
 public enum TokenType {
     ACCESS_TOKEN("access"),
     REFRESH_TOKEN("refresh");

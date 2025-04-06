@@ -4,6 +4,7 @@ import com.BallaDream.BallaDream.constants.TokenType;
 import io.jsonwebtoken.Jwts;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
+import lombok.Getter;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
@@ -15,13 +16,19 @@ import java.util.Date;
 
 import static com.BallaDream.BallaDream.constants.TokenType.*;
 
+@Getter
 @Component
 public class JWTUtil {
 
-    private SecretKey secretKey;
+    private final SecretKey secretKey;
+    private final Long accessTokenExpiredTime;
+    private final Long refreshTokenExpiredTime;
 
-    public JWTUtil(@Value("${spring.jwt.secret}") String secret) {
-        secretKey = new SecretKeySpec(secret.getBytes(StandardCharsets.UTF_8), Jwts.SIG.HS256.key().build().getAlgorithm());
+    public JWTUtil(@Value("${spring.jwt.secret}") String secret, @Value("${spring.jwt.access-token-validity-time}") Long accessTokenExpiredTime,
+                   @Value("${spring.jwt.refresh-token-validity-time}") Long refreshTokenExpiredTime) {
+        this.secretKey = new SecretKeySpec(secret.getBytes(StandardCharsets.UTF_8), Jwts.SIG.HS256.key().build().getAlgorithm());
+        this.accessTokenExpiredTime = accessTokenExpiredTime;
+        this.refreshTokenExpiredTime = refreshTokenExpiredTime;
     }
 
     public String getUsername(String token) {
@@ -53,6 +60,7 @@ public class JWTUtil {
                 .compact();
     }
 
+    //쿠키에서 refresh 토큰을 꺼내는 메서드
     public String getRefreshToken(Cookie[] cookies) {
         for (Cookie cookie : cookies) {
             if (cookie.getName().equals(REFRESH_TOKEN.getType())) {
@@ -62,6 +70,7 @@ public class JWTUtil {
         return null;
     }
 
+    //토큰이 유효한지 테스트
     public boolean isValidToken(String token) {
         String username = getUsername(token);
         String role = getRole(token);

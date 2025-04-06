@@ -40,6 +40,10 @@ dependencies {
 	implementation 'io.jsonwebtoken:jjwt-api:0.12.3'
 	implementation 'io.jsonwebtoken:jjwt-impl:0.12.3'
 	implementation 'io.jsonwebtoken:jjwt-jackson:0.12.3'
+
+	//테스트 코드에서 롬복 사용하기
+	testAnnotationProcessor 'org.projectlombok:lombok' // 테스트를 위한 세팅
+	testImplementation 'org.projectlombok:lombok' // 테스트를 위한 세팅
 }
 
 tasks.named('test') {

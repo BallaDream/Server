@@ -1,6 +1,7 @@
 package com.BallaDream.BallaDream.jwt;
 
 import com.BallaDream.BallaDream.common.ResponseUtil;
+import com.BallaDream.BallaDream.constants.UserRole;
 import com.BallaDream.BallaDream.domain.UserEntity;
 import com.BallaDream.BallaDream.dto.security.CustomUserDetails;
 import io.jsonwebtoken.*;

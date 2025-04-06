@@ -3,6 +3,7 @@ package com.BallaDream.BallaDream.jwt;
 import com.BallaDream.BallaDream.common.CookieUtil;
 import com.BallaDream.BallaDream.common.RedisUtil;
 import com.BallaDream.BallaDream.common.ResponseUtil;
+import com.BallaDream.BallaDream.constants.TokenType;
 import com.BallaDream.BallaDream.dto.user.UserDto;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.FilterChain;
@@ -12,6 +13,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -43,7 +45,7 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
     private final AuthenticationManager authenticationManager;
     private final RedisUtil redisUtil;
     private final JWTUtil jwtUtil;
-    private ObjectMapper objectMapper = new ObjectMapper();
+    private final ObjectMapper objectMapper = new ObjectMapper();
 
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
@@ -81,11 +83,11 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
         String role = auth.getAuthority();
 
         //토큰 생성
-        String accessToken = jwtUtil.createJwt("access", username, role, 86400000L);
-        String refreshToken = jwtUtil.createJwt("refresh", username, role, 86400000L);
+        String accessToken = jwtUtil.createJwt(ACCESS_TOKEN.getType(), username, role, jwtUtil.getAccessTokenExpiredTime());
+        String refreshToken = jwtUtil.createJwt(REFRESH_TOKEN.getType(), username, role, jwtUtil.getRefreshTokenExpiredTime());
 
         //refresh 토큰 저장
-        redisUtil.setDataExpire(refreshToken, username, 86400000L);
+        redisUtil.setDataExpire(refreshToken, username, jwtUtil.getRefreshTokenExpiredTime());
 
         //응답 설정
         response.setHeader(ACCESS_TOKEN.getType(), accessToken);
