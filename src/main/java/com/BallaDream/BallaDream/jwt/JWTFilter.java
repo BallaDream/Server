@@ -1,8 +1,7 @@
 package com.BallaDream.BallaDream.jwt;
 
 import com.BallaDream.BallaDream.common.ResponseUtil;
-import com.BallaDream.BallaDream.constants.UserRole;
-import com.BallaDream.BallaDream.domain.UserEntity;
+import com.BallaDream.BallaDream.domain.user.User;
 import com.BallaDream.BallaDream.dto.security.CustomUserDetails;
 import io.jsonwebtoken.*;
 import jakarta.servlet.FilterChain;
@@ -41,9 +40,9 @@ public class JWTFilter extends OncePerRequestFilter {
             if (StringUtils.hasText(jwt) && jwtUtil.isValidToken(jwt)) {
                 String username = jwtUtil.getUsername(jwt);
                 String role = jwtUtil.getRole(jwt);
-                UserEntity userEntity = new UserEntity(username, role);
+                User user = new User(username, role);
                 //UserDetails 에 회원 정보 객체 담기
-                CustomUserDetails customUserDetails = new CustomUserDetails(userEntity);
+                CustomUserDetails customUserDetails = new CustomUserDetails(user);
                 //스프링 시큐리티 인증 토큰 생성
                 Authentication authToken = new UsernamePasswordAuthenticationToken(customUserDetails, null, customUserDetails.getAuthorities());
                 //세션에 사용자 등록

@@ -1,6 +1,6 @@
 package com.BallaDream.BallaDream.dto.security;
 
-import com.BallaDream.BallaDream.domain.UserEntity;
+import com.BallaDream.BallaDream.domain.user.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -11,7 +11,7 @@ import java.util.Collection;
 @RequiredArgsConstructor
 public class CustomUserDetails implements UserDetails {
 
-    private final UserEntity userEntity;
+    private final User user;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -21,7 +21,7 @@ public class CustomUserDetails implements UserDetails {
             @Override
             public String getAuthority() {
 //                return userEntity.getRole();
-                return userEntity.getRole().getUserRoleType();
+                return user.getRole().getUserRoleType();
             }
         });
 
@@ -30,11 +30,11 @@ public class CustomUserDetails implements UserDetails {
 
     @Override
     public String getPassword() {
-        return userEntity.getPassword();
+        return user.getPassword();
     }
 
     @Override
     public String getUsername() {
-        return userEntity.getUsername();
+        return user.getUsername();
     }
 }

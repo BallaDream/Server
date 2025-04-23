@@ -7,6 +7,7 @@ public enum ResponseCode {
     ILLEGAL_TOKEN("부적절한 토큰입니다.", 400),
     UNAUTHORIZED("인가받지 못한 상태입니다.", 401),
     LOGIN_FAIL("로그인에 실패하였습니다.", 401),
+    ID_ALREADY_EXISTS("이미 존재하는 아이디 입니다.", 400),
     INVALID_LOGIN_PARAMETER("로그인 아이디나 패스워드를 입력하지 않았습니다.", 406),
     INVALID_INPUT_FORMAT("유효하지 않은 입력값을 입력했습니다.", 400);
 

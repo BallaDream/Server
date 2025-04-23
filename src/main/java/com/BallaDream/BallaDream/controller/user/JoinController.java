@@ -1,7 +1,7 @@
 package com.BallaDream.BallaDream.controller.user;
 
 import com.BallaDream.BallaDream.dto.user.JoinDto;
-import com.BallaDream.BallaDream.service.JoinService;
+import com.BallaDream.BallaDream.service.user.JoinService;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.validation.BindingResult;
