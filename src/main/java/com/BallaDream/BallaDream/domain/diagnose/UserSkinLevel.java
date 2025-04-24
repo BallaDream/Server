@@ -23,4 +23,14 @@ public class UserSkinLevel {
     @Column(name = "diagnosis_type")
     @Enumerated(EnumType.STRING)
     private DiagnosisType diagnosisType;
+
+    public UserSkinLevel() {
+    }
+
+    public UserSkinLevel(Diagnose diagnose, Level level, DiagnosisType diagnosisType) {
+        this.diagnose = diagnose;
+        diagnose.getSkinLevelList().add(this); //연관 관계
+        this.level = level;
+        this.diagnosisType = diagnosisType;
+    }
 }

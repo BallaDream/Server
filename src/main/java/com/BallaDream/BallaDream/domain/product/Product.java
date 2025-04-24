@@ -1,9 +1,6 @@
 package com.BallaDream.BallaDream.domain.product;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
+import jakarta.persistence.*;
 import lombok.Getter;
 
 import java.util.ArrayList;
@@ -14,8 +11,12 @@ import java.util.List;
 public class Product {
 
     @Id
+    @Column(name = "product_id")
+    private Long id;
+
     @Column(name = "product_name")
     private String productName;
+
     private int price;
 
     @Column(name = "sales_link")
@@ -31,4 +32,19 @@ public class Product {
 
     @OneToMany(mappedBy = "product")
     private List<Element> elements = new ArrayList<>();
+
+    @OneToOne(mappedBy = "product")
+    private InterestedProduct interestedProduct;
+
+    public Product() {
+    }
+
+    public Product(Long id, String productName, int price, String salesLink, String imageLink, String formulation) {
+        this.id = id;
+        this.productName = productName;
+        this.price = price;
+        this.salesLink = salesLink;
+        this.imageLink = imageLink;
+        this.formulation = formulation;
+    }
 }

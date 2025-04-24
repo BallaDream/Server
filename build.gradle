@@ -44,6 +44,9 @@ dependencies {
 	//테스트 코드에서 롬복 사용하기
 	testAnnotationProcessor 'org.projectlombok:lombok' // 테스트를 위한 세팅
 	testImplementation 'org.projectlombok:lombok' // 테스트를 위한 세팅
+
+	//csv 파일 읽기
+	implementation 'com.opencsv:opencsv:5.9'
 }
 
 tasks.named('test') {

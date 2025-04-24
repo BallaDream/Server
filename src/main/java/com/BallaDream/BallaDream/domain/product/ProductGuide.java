@@ -8,14 +8,23 @@ public class ProductGuide {
 
     @Id
     @Column(name = "product_guide_id")
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+//    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "product_name")
+    @JoinColumn(name = "product_id")
     private Product product;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "guide_id")
     private Guide guide;
+
+    public ProductGuide() {
+    }
+
+    public ProductGuide(Long id, Product product, Guide guide) {
+        this.id = id;
+        this.product = product;
+        this.guide = guide;
+    }
 }

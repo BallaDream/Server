@@ -20,4 +20,8 @@ public class InterestedProduct {
     private String productName;
 
     private String type; //Todo enum or String 생각할 것
+
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "product_id")
+    private Product product;
 }

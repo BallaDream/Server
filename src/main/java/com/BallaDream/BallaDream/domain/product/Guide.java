@@ -11,18 +11,27 @@ import java.util.List;
 public class Guide {
     @Id
     @Column(name = "guide_id")
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Enumerated(EnumType.STRING)
-    private Level level;
+    private String description;
 
     @Column(name = "diagnosis_type")
     @Enumerated(EnumType.STRING)
     private DiagnosisType diagnosisType;
 
-    private String description;
+    @Enumerated(EnumType.STRING)
+    private Level level;
 
     @OneToMany(mappedBy = "guide")
     private List<ProductGuide> productGuides = new ArrayList<>();
+
+    public Guide() {
+    }
+
+    public Guide(Long id, String description, DiagnosisType diagnosisType, Level level) {
+        this.id = id;
+        this.description = description;
+        this.diagnosisType = diagnosisType;
+        this.level = level;
+    }
 }
