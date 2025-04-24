@@ -8,6 +8,6 @@ public class OpenController {
 
     @GetMapping("/open")
     public String openApi() {
-        return "ci cd success";
+        return "ci cd success~~";
     }
 }

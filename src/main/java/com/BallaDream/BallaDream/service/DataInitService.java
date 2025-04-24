@@ -60,7 +60,7 @@ public class DataInitService {
         }
     }
 
-    @PostConstruct
+//    @PostConstruct
     public void csvToDb() {
         readCSV("data/guide.csv", this::makeGuideWithLine, guideRepository);
         readCSV("data/product.csv", this::makeProductWithLine, productRepository);
