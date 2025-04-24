@@ -20,9 +20,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
@@ -38,20 +36,25 @@ public class DataInitService {
     private final ProductGuideRepository productGuideRepository;
     private final ProductRepository productRepository;
 
-    public <T> void readCSV(String path, Function<String[], T> mapper, JpaRepository<T, ?> repository) {
-        try (CSVReader csvReader = new CSVReader(new InputStreamReader(new FileInputStream(path), StandardCharsets.UTF_8))) {
+    public <T> void readCSV(String classpath, Function<String[], T> mapper, JpaRepository<T, ?> repository) {
+        try (InputStream is = getClass().getClassLoader().getResourceAsStream(classpath);
+             CSVReader csvReader = new CSVReader(new InputStreamReader(is, StandardCharsets.UTF_8))) {
+
+            if (is == null) {
+                throw new FileNotFoundException("리소스를 찾을 수 없습니다: " + classpath);
+            }
+
             String[] line;
             int idx = 0;
             List<T> result = new ArrayList<>();
             while ((line = csvReader.readNext()) != null) {
-                //첫번째 행은 컬럼명이므로 넘어가고 다음 데이터부터 읽어들인다.
                 if (idx != 0) {
-                    result.add(mapper.apply(line)); // 파라미터로 받은 함수 호출
+                    result.add(mapper.apply(line));
                 }
                 idx++;
             }
-            repository.saveAll(result); //db에 데이터 저장
-            log.info("Saved {} rows from {}", result.size(), path); //결과 저장 확인용 로그
+            repository.saveAll(result);
+            log.info("Saved {} rows from {}", result.size(), classpath);
         } catch (IOException | CsvValidationException e) {
             log.error("CSV 읽기 중 오류 발생: {}", e.getMessage());
         }
