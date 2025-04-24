@@ -59,10 +59,10 @@ public class DataInitService {
 
     @PostConstruct
     public void csvToDb() {
-        readCSV("src/main/resources/data/guide.csv", this::makeGuideWithLine, guideRepository);
-        readCSV("src/main/resources/data/product.csv", this::makeProductWithLine, productRepository);
-        readCSV("src/main/resources/data/element.csv", this::makeElementWithLine, elementRepository);
-        readCSV("src/main/resources/data/product_guide.csv", this::makeProductGuideWithLine, productGuideRepository);
+        readCSV("data/guide.csv", this::makeGuideWithLine, guideRepository);
+        readCSV("data/product.csv", this::makeProductWithLine, productRepository);
+        readCSV("data/element.csv", this::makeElementWithLine, elementRepository);
+        readCSV("data/product_guide.csv", this::makeProductGuideWithLine, productGuideRepository);
     }
 
     //csv 파일의 행 순서대로 가져와서 객체를 생성해주는 메서드들

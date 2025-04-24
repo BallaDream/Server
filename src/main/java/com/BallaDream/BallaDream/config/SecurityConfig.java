@@ -2,6 +2,7 @@ package com.BallaDream.BallaDream.config;
 
 import com.BallaDream.BallaDream.common.RedisUtil;
 import com.BallaDream.BallaDream.jwt.*;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -17,6 +18,10 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.authentication.logout.LogoutFilter;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+
+import java.util.Collections;
 
 @Slf4j
 @Configuration
@@ -63,7 +68,26 @@ public class SecurityConfig {
                         UsernamePasswordAuthenticationFilter.class)
 
                 .sessionManagement((session) -> session
-                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS));
+                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+
+                //security filter cors 설정
+                .cors((corsCustomizer -> corsCustomizer.configurationSource(new CorsConfigurationSource() {
+
+                    @Override
+                    public CorsConfiguration getCorsConfiguration(HttpServletRequest request) {
+
+                        CorsConfiguration configuration = new CorsConfiguration();
+
+                        configuration.setAllowedOrigins(Collections.singletonList("http://localhost:3000")); //Todo 프론트엔드 서버로 변경
+                        configuration.setAllowedMethods(Collections.singletonList("*")); //모든 get, post 등의 메서드 허용
+                        configuration.setAllowCredentials(true);
+                        configuration.setAllowedHeaders(Collections.singletonList("*"));
+                        configuration.setMaxAge(3600L);
+                        configuration.setExposedHeaders(Collections.singletonList("Authorization")); //jwt 토큰을 위한 헤더 허용
+
+                        return configuration;
+                    }
+                })));
 
         return http.build();
     }
