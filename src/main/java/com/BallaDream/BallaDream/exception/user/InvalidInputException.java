@@ -1,10 +1,9 @@
 package com.BallaDream.BallaDream.exception.user;
 
-public class InvalidInputException extends RuntimeException {
-    public InvalidInputException() {
-    }
+import com.BallaDream.BallaDream.constants.ResponseCode;
 
-    public InvalidInputException(String message) {
-        super(message);
+public class InvalidInputException extends UserException {
+    public InvalidInputException() {
+        super(ResponseCode.INVALID_INPUT_DATA);
     }
 }

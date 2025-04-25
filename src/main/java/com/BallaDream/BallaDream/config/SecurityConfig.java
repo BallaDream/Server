@@ -56,7 +56,8 @@ public class SecurityConfig {
                 .httpBasic((auth) -> auth.disable())
 
                 .authorizeHttpRequests((auth) -> auth
-                        .requestMatchers("/login", "/open", "/join", "/reissue", "/", "/vertify-email").permitAll()
+                        .requestMatchers("/login", "/open", "/join", "/reissue", "/", "/vertify-email",
+                                "/test").permitAll()
                         .anyRequest().authenticated())
 
                 .exceptionHandling(ex -> ex

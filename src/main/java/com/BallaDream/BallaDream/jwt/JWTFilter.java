@@ -47,7 +47,7 @@ public class JWTFilter extends OncePerRequestFilter {
                 Authentication authToken = new UsernamePasswordAuthenticationToken(customUserDetails, null, customUserDetails.getAuthorities());
                 //세션에 사용자 등록
                 SecurityContextHolder.getContext().setAuthentication(authToken);
-                filterChain.doFilter(request, response);
+//                filterChain.doFilter(request, response);
             }
 
             filterChain.doFilter(request, response); //토큰이 필요없는 경우 일수도 있으므로 doFilter 수행
