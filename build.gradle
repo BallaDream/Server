@@ -47,6 +47,9 @@ dependencies {
 
 	//csv 파일 읽기
 	implementation 'com.opencsv:opencsv:5.9'
+
+	//메일 전송
+	implementation 'org.springframework.boot:spring-boot-starter-mail'
 }
 
 tasks.named('test') {

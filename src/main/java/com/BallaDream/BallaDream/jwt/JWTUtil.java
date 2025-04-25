@@ -48,10 +48,10 @@ public class JWTUtil {
         return Jwts.parser().verifyWith(secretKey).build().parseSignedClaims(token).getPayload().get("category", String.class);
     }
 
-    public String createJwt(String category, String username, String role, Long expiredMs) {
+    public String createJwt(TokenType token, String username, String role, Long expiredMs) {
 
         return Jwts.builder()
-                .claim("category", category) //refresh or access
+                .claim("category", token.getType()) //refresh or access
                 .claim("username", username)
                 .claim("role", role)
                 .issuedAt(new Date(System.currentTimeMillis()))

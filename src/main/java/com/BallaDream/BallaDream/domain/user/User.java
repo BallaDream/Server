@@ -1,13 +1,16 @@
 package com.BallaDream.BallaDream.domain.user;
 
+import com.BallaDream.BallaDream.constants.ResponseCode;
 import com.BallaDream.BallaDream.domain.diagnose.Diagnose;
 import com.BallaDream.BallaDream.domain.enums.LoginType;
 import com.BallaDream.BallaDream.domain.enums.UserRole;
 import com.BallaDream.BallaDream.domain.product.InterestedProduct;
+import com.BallaDream.BallaDream.exception.user.UserException;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.net.UnknownServiceException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,6 +27,7 @@ public class User {
 
     private String username;
     private String password;
+    private String nickname;
 
     @Column(name = "login_type")
     @Enumerated(EnumType.STRING)
@@ -49,7 +53,7 @@ public class User {
         this.username = username;
         UserRole roleType = UserRole.valueOfRole(role);
         if (roleType == null) {
-            throw new RuntimeException("토큰에 배정된 역할이 없음"); //Todo 예외 정의
+            throw new UserException(ResponseCode.INVALID_USER);
         }
         this.role = roleType;
         this.password = "temp"; //context 저장을 위한 임시 비밀번호
@@ -58,6 +62,7 @@ public class User {
     public User(String username, String password, LoginType loginType, UserRole role) {
         this.username = username;
         this.password = password;
+        this.nickname = "3";
         this.loginType = loginType;
         this.role = role;
     }

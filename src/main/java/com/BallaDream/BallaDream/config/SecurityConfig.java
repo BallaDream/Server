@@ -56,7 +56,7 @@ public class SecurityConfig {
                 .httpBasic((auth) -> auth.disable())
 
                 .authorizeHttpRequests((auth) -> auth
-                        .requestMatchers("/login", "/open", "/join", "/reissue", "/").permitAll()
+                        .requestMatchers("/login", "/open", "/join", "/reissue", "/", "/vertify-email").permitAll()
                         .anyRequest().authenticated())
 
                 .exceptionHandling(ex -> ex
@@ -93,12 +93,12 @@ public class SecurityConfig {
     }
 
     // 설정한 경로는 스프링 필터를 거치지 않게 함
-    @Bean
+    /*@Bean
     public WebSecurityCustomizer webSecurityCustomizer() {
         return web -> {
             web.ignoring()
                     .requestMatchers(
                             "/open");
         };
-    }
+    }*/
 }
