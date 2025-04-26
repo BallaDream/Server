@@ -11,8 +11,10 @@ public enum ResponseCode {
     INVALID_AUTH_NUMBER("잘못된 인증번호 입니다.", 400),
     INVALID_LOGIN_PARAMETER("로그인 아이디나 패스워드를 입력하지 않았습니다.", 406),
     INVALID_USER("유효한 회원이 아닙니다.", 401),
-    INVALID_INPUT_DATA("유효한 데이터가 아닙니다.", 401), //입력 포맷은 맞으나 데이터가 잘못된 경우 ex) 비밀번호 틀림
-    INVALID_INPUT_FORMAT("유효하지 않은 입력값을 입력했습니다.", 400); //컨트롤러에서 입력 포맷이 잘못된 경우
+    INVALID_INPUT_DATA("유효한 데이터가 아닙니다.", 401),
+    INVALID_INPUT_FORMAT("유효하지 않은 입력값을 입력했습니다.", 400), //컨트롤러에서 입력 포맷이 잘못된 경우
+    DIAGNOSE_ACCESS_ERROR("다른 사람의 진단 기록을 열람할 수 없습니다.", 403),
+    ALREADY_INTERESTED_PRODUCT("이미 관심 제품으로 등록하였습니다.", 409);
 
 
     private final String message;

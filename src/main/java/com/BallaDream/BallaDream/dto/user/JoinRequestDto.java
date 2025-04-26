@@ -7,7 +7,7 @@ import lombok.Data;
 
 @Data
 @AllArgsConstructor
-public class JoinDto {
+public class JoinRequestDto {
     @Email(message = "이메일 형식이어야 합니다.")
     private String username;
     @NotBlank(message = "비밀번호는 필수로 입력해야 합니다.")

@@ -47,4 +47,9 @@ public class Product {
         this.imageLink = imageLink;
         this.formulation = formulation;
     }
+
+    //연관 관계 메서드
+    public void associateInterestedProduct(InterestedProduct interestedProduct) {
+        this.interestedProduct = interestedProduct;
+    }
 }

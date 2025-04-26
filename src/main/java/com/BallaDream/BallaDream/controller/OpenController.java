@@ -1,8 +1,5 @@
 package com.BallaDream.BallaDream.controller;
 
-import com.BallaDream.BallaDream.domain.enums.DiagnosisType;
-import com.BallaDream.BallaDream.dto.diagnose.TestDto;
-import com.BallaDream.BallaDream.dto.product.RecommendProductDto;
 import com.BallaDream.BallaDream.dto.product.RecommendationProductResponseDto;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.GetMapping;

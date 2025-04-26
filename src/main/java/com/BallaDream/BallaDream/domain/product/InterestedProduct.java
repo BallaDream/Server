@@ -1,6 +1,6 @@
 package com.BallaDream.BallaDream.domain.product;
 
-import com.BallaDream.BallaDream.domain.enums.DiagnosisType;
+import com.BallaDream.BallaDream.domain.enums.DiagnoseType;
 import com.BallaDream.BallaDream.domain.user.User;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -18,11 +18,29 @@ public class InterestedProduct {
     @JoinColumn(name = "user_id")
     private User user;
 
-    private String productName;
-
-    private DiagnosisType diagnosisType; //Todo enum or String 생각할 것
+    @Column(name = "diagnose_type")
+    @Enumerated(EnumType.STRING)
+    private DiagnoseType diagnoseType;
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "product_id")
     private Product product;
+
+    public InterestedProduct() {
+    }
+
+    public InterestedProduct(User user, DiagnoseType diagnoseType, Product product) {
+        this.user = user;
+        this.diagnoseType = diagnoseType;
+        this.product = product;
+    }
+
+    //연관 관계 매핑 메서드
+    public void associateUser(User user) {
+        user.getInterestedProducts().add(this); //연관관계 매핑
+    }
+
+    public void associateProduct(Product product) {
+        product.associateInterestedProduct(this); //연관 관계 매핑
+    }
 }

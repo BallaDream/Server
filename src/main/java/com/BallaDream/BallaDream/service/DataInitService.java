@@ -1,6 +1,6 @@
 package com.BallaDream.BallaDream.service;
 
-import com.BallaDream.BallaDream.domain.enums.DiagnosisType;
+import com.BallaDream.BallaDream.domain.enums.DiagnoseType;
 import com.BallaDream.BallaDream.domain.enums.Level;
 import com.BallaDream.BallaDream.domain.product.Element;
 import com.BallaDream.BallaDream.domain.product.Guide;
@@ -13,12 +13,10 @@ import com.BallaDream.BallaDream.repository.product.ProductGuideRepository;
 import com.BallaDream.BallaDream.repository.product.ProductRepository;
 import com.opencsv.CSVReader;
 import com.opencsv.exceptions.CsvValidationException;
-import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
@@ -70,7 +68,7 @@ public class DataInitService {
 
     //csv 파일의 행 순서대로 가져와서 객체를 생성해주는 메서드들
     private Guide makeGuideWithLine(String[] line) {
-        return new Guide(Long.parseLong(line[0]), line[1], DiagnosisType.valueOf(line[2]),
+        return new Guide(Long.parseLong(line[0]), line[1], DiagnoseType.valueOf(line[2]),
                 Level.valueOf(line[3]));
     }
 

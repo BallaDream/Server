@@ -1,9 +1,15 @@
 package com.BallaDream.BallaDream.repository.product.query;
 
-import com.BallaDream.BallaDream.domain.enums.DiagnosisType;
+import com.BallaDream.BallaDream.domain.enums.DiagnoseType;
 import com.BallaDream.BallaDream.domain.enums.Level;
+import com.BallaDream.BallaDream.domain.product.Guide;
+import com.BallaDream.BallaDream.domain.product.Product;
+import com.BallaDream.BallaDream.domain.product.ProductGuide;
 import com.BallaDream.BallaDream.domain.user.User;
-import com.BallaDream.BallaDream.dto.RecommendProductQueryDto;
+import com.BallaDream.BallaDream.dto.product.RecommendProductQueryDto;
+import com.BallaDream.BallaDream.repository.product.GuideRepository;
+import com.BallaDream.BallaDream.repository.product.ProductGuideRepository;
+import com.BallaDream.BallaDream.repository.product.ProductRepository;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -12,7 +18,9 @@ import jakarta.persistence.PersistenceContext;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -29,12 +37,38 @@ import static org.assertj.core.api.Assertions.*;
 @SpringBootTest
 class ProductQueryRepositoryTest {
 
+    @Autowired ProductQueryRepository productQueryRepository;
+    @Autowired ProductRepository productRepository;
+    @Autowired GuideRepository guideRepository;
+    @Autowired ProductGuideRepository productGuideRepository;
     @PersistenceContext EntityManager em;
     JPAQueryFactory queryFactory;
 
     @BeforeEach
     public void before() {
         queryFactory = new JPAQueryFactory(em);
+    }
+
+    @Test
+    @Transactional
+    void findByIdAndDiagnoseTypeTest() {
+
+        //given
+        Product product = new Product(10000L, "p1", 1000, "link1", "link2", "formulation");
+        Guide guide = new Guide(1000L, "desc", DiagnoseType.ACNE, Level.CLEAR);
+        ProductGuide productGuide = new ProductGuide(100000L, product, guide);
+
+        //when
+        productRepository.save(product);
+        guideRepository.save(guide);
+        productGuide.associateGuide(guide);
+        productGuide.associateProduct(product);
+        productGuideRepository.save(productGuide);
+        //then
+        Product findResult = productQueryRepository.findByIdAndDiagnoseType(10000L, DiagnoseType.ACNE);
+        Product nullResult = productQueryRepository.findByIdAndDiagnoseType(100000000L, DiagnoseType.ACNE); //없는 데이터
+        assertThat(findResult.getId()).isEqualTo(product.getId());
+        assertThat(nullResult).isNull();
     }
 
     @Test
@@ -67,19 +101,16 @@ class ProductQueryRepositoryTest {
                 .leftJoin(interestedProduct)
                 .on(product.id.eq(interestedProduct.product.id)
                         .and(interestedProduct.user.id.eq(3L)) //Todo 실제 사용자 pk
-                        .and(interestedProduct.diagnosisType.eq(DiagnosisType.DRY))) //Todo 추천 제품의 종류
+                        .and(interestedProduct.diagnoseType.eq(DiagnoseType.DRY))) //Todo 추천 제품의 종류
                 .where(
                         guide.level.eq(Level.CAUTION),
-                        guide.diagnosisType.eq(DiagnosisType.DRY),
+                        guide.diagnoseType.eq(DiagnoseType.DRY),
                         formulationEq("립밤"),
                         priceBetween(3000, 10000)
                 )
                 .fetch();
 
         log.info("{}", result.size());
-        /*for (TempDto tempDto : result) {
-            log.info("{} {}", tempDto.getProductName(), tempDto.getElementName());
-        }*/
     }
 
     private BooleanExpression formulationEq(String formulationCond) {

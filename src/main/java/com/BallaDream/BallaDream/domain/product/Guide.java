@@ -1,12 +1,14 @@
 package com.BallaDream.BallaDream.domain.product;
 
-import com.BallaDream.BallaDream.domain.enums.DiagnosisType;
+import com.BallaDream.BallaDream.domain.enums.DiagnoseType;
 import com.BallaDream.BallaDream.domain.enums.Level;
 import jakarta.persistence.*;
+import lombok.Getter;
 
 import java.util.ArrayList;
 import java.util.List;
 
+@Getter
 @Entity
 public class Guide {
     @Id
@@ -17,7 +19,7 @@ public class Guide {
 
     @Column(name = "diagnosis_type")
     @Enumerated(EnumType.STRING)
-    private DiagnosisType diagnosisType;
+    private DiagnoseType diagnoseType;
 
     @Enumerated(EnumType.STRING)
     private Level level;
@@ -28,10 +30,10 @@ public class Guide {
     public Guide() {
     }
 
-    public Guide(Long id, String description, DiagnosisType diagnosisType, Level level) {
+    public Guide(Long id, String description, DiagnoseType diagnoseType, Level level) {
         this.id = id;
         this.description = description;
-        this.diagnosisType = diagnosisType;
+        this.diagnoseType = diagnoseType;
         this.level = level;
     }
 }

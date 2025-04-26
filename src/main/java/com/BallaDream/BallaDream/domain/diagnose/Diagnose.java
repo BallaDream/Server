@@ -35,7 +35,10 @@ public class Diagnose {
 
     public Diagnose(User user) {
         this.user = user;
-        user.getDiagnoses().add(this); //연관 관계
         date = LocalDate.now();
+    }
+
+    public void associateUser(User user) {
+        user.getDiagnoses().add(this); //연관 관계
     }
 }

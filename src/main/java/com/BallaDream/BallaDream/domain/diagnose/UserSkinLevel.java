@@ -1,10 +1,12 @@
 package com.BallaDream.BallaDream.domain.diagnose;
 
-import com.BallaDream.BallaDream.domain.enums.DiagnosisType;
+import com.BallaDream.BallaDream.domain.enums.DiagnoseType;
 import com.BallaDream.BallaDream.domain.enums.Level;
 import jakarta.persistence.*;
+import lombok.Getter;
 
 @Table(name = "user_skin_level")
+@Getter
 @Entity
 public class UserSkinLevel {
 
@@ -20,17 +22,20 @@ public class UserSkinLevel {
     @Enumerated(EnumType.STRING)
     private Level level;
 
-    @Column(name = "diagnosis_type")
+    @Column(name = "diagnose_type")
     @Enumerated(EnumType.STRING)
-    private DiagnosisType diagnosisType;
+    private DiagnoseType diagnoseType;
 
     public UserSkinLevel() {
     }
 
-    public UserSkinLevel(Diagnose diagnose, Level level, DiagnosisType diagnosisType) {
+    public UserSkinLevel(Diagnose diagnose, Level level, DiagnoseType diagnoseType) {
         this.diagnose = diagnose;
-        diagnose.getSkinLevelList().add(this); //연관 관계
         this.level = level;
-        this.diagnosisType = diagnosisType;
+        this.diagnoseType = diagnoseType;
+    }
+
+    public void associateDiagnose(Diagnose diagnose) {
+        diagnose.getSkinLevelList().add(this); //연관 관계
     }
 }

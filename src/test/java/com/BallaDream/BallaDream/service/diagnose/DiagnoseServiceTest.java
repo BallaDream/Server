@@ -2,14 +2,13 @@ package com.BallaDream.BallaDream.service.diagnose;
 
 import com.BallaDream.BallaDream.domain.diagnose.Diagnose;
 import com.BallaDream.BallaDream.domain.diagnose.UserSkinLevel;
-import com.BallaDream.BallaDream.domain.enums.DiagnosisType;
+import com.BallaDream.BallaDream.domain.enums.DiagnoseType;
 import com.BallaDream.BallaDream.domain.enums.Level;
 import com.BallaDream.BallaDream.domain.user.User;
-import com.BallaDream.BallaDream.dto.diagnose.DiagnoseResultDto;
+import com.BallaDream.BallaDream.dto.diagnose.DiagnoseResultRequestDto;
 import com.BallaDream.BallaDream.repository.diagnose.DiagnoseRepository;
 import com.BallaDream.BallaDream.repository.diagnose.UserSkinLevelRepository;
 import com.BallaDream.BallaDream.repository.user.UserRepository;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -19,7 +18,6 @@ import java.util.List;
 import java.util.Map;
 
 import static org.assertj.core.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 class DiagnoseServiceTest {
@@ -34,15 +32,15 @@ class DiagnoseServiceTest {
     void saveDiagnosis() {
 
         //given
-        DiagnoseResultDto dto = new DiagnoseResultDto();
-        Map<DiagnosisType, Level> userSkinLevel = dto.getData(); //임의로 피부 진단 결과 생성
-        userSkinLevel.put(DiagnosisType.DRY, Level.CAUTION);
-        userSkinLevel.put(DiagnosisType.ACNE, Level.CLEAR);
+        DiagnoseResultRequestDto dto = new DiagnoseResultRequestDto();
+        Map<DiagnoseType, Level> userSkinLevel = dto.getData(); //임의로 피부 진단 결과 생성
+        userSkinLevel.put(DiagnoseType.DRY, Level.CAUTION);
+        userSkinLevel.put(DiagnoseType.ACNE, Level.CLEAR);
         User user = new User();
         userRepository.save(user);
 
         //when
-        diagnoseService.saveDiagnose(dto, user.getUsername());
+        diagnoseService.saveDiagnose(dto.getData(), user.getUsername());
 
         //then
         List<Diagnose> diagnoseResult = diagnoseRepository.findAll();

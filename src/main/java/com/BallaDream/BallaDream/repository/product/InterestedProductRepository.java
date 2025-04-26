@@ -1,7 +1,17 @@
 package com.BallaDream.BallaDream.repository.product;
 
+import com.BallaDream.BallaDream.domain.enums.DiagnoseType;
 import com.BallaDream.BallaDream.domain.product.InterestedProduct;
+import com.BallaDream.BallaDream.domain.user.User;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
+
+import java.util.Optional;
 
 public interface InterestedProductRepository extends JpaRepository<InterestedProduct, Long> {
+
+    Optional<InterestedProduct> findByUserAndDiagnoseType(User user, DiagnoseType diagnoseType);
+
+    @Modifying
+    void deleteByUserAndDiagnoseType(User user, DiagnoseType diagnoseType);
 }

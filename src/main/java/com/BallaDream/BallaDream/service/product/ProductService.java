@@ -1,9 +1,9 @@
 package com.BallaDream.BallaDream.service.product;
 
 import com.BallaDream.BallaDream.constants.ResponseCode;
-import com.BallaDream.BallaDream.domain.enums.DiagnosisType;
+import com.BallaDream.BallaDream.domain.enums.DiagnoseType;
 import com.BallaDream.BallaDream.domain.user.User;
-import com.BallaDream.BallaDream.dto.RecommendProductQueryDto;
+import com.BallaDream.BallaDream.dto.product.RecommendProductQueryDto;
 import com.BallaDream.BallaDream.dto.product.RecommendProductDto;
 import com.BallaDream.BallaDream.dto.product.RecommendationProductResponseDto;
 import com.BallaDream.BallaDream.exception.user.UserException;
@@ -28,21 +28,17 @@ public class ProductService {
     private final UserRepository userRepository;
     private final ProductRepository productRepository;
 
-    public RecommendationProductResponseDto createRecommend(DiagnosisType diagnosisType,
+    public RecommendationProductResponseDto createRecommend(DiagnoseType diagnoseType,
                                                             String formulation, Integer minPrice, Integer maxPrice,
                                                             int step) {
         String username = userService.getUsernameInToken();
         User user = userRepository.findByUsername(username).orElseThrow(() ->
                 new UserException(ResponseCode.INVALID_USER));
 
-        List<RecommendProductQueryDto> queryDto = productQueryRepository.recommendProduct(user.getId(), diagnosisType,
+        List<RecommendProductQueryDto> queryDto = productQueryRepository.recommendProduct(user.getId(), diagnoseType,
                 formulation, minPrice, maxPrice, step * 8, 8);
 
         List<RecommendProductDto> result = mapToRecommendProductDto(queryDto);
-        for (RecommendProductDto recommendProductDto : result) {
-            log.info("{} {}", recommendProductDto.getProductName(), recommendProductDto.getElement().size());
-        }
-
         return new RecommendationProductResponseDto("ha", result);
     }
 
@@ -66,7 +62,7 @@ public class ProductService {
                     List<String> elements = entry.getValue().stream()
                             .map(RecommendProductQueryDto::getElementName)
                             .distinct() // 중복 제거
-                            .sorted()   // 정렬 (필요 없으면 빼도 됨)
+                            .sorted()   // 정렬
                             .toList();
 
                     return new RecommendProductDto(

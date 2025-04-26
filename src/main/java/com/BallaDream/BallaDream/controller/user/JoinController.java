@@ -1,8 +1,8 @@
 package com.BallaDream.BallaDream.controller.user;
 
 import com.BallaDream.BallaDream.dto.message.ResponseDto;
-import com.BallaDream.BallaDream.dto.user.JoinDto;
-import com.BallaDream.BallaDream.dto.user.JoinMailDto;
+import com.BallaDream.BallaDream.dto.user.JoinRequestDto;
+import com.BallaDream.BallaDream.dto.user.JoinMailRequestDto;
 import com.BallaDream.BallaDream.service.user.JoinService;
 import com.BallaDream.BallaDream.service.user.MailSendService;
 import lombok.RequiredArgsConstructor;
@@ -23,16 +23,16 @@ public class JoinController {
     private final MailSendService mailService;
 
     @PostMapping("/join")
-    public ResponseEntity<ResponseDto> joinProcess(@RequestBody @Validated JoinDto joinDto) {
+    public ResponseEntity<ResponseDto> joinProcess(@RequestBody @Validated JoinRequestDto joinRequestDto) {
 
-        joinService.webJoinProcess(joinDto);
+        joinService.webJoinProcess(joinRequestDto.getUsername(), joinRequestDto.getPassword(), joinRequestDto.getAuthNum());
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(ResponseDto.of(HttpStatus.OK, "회원가입을 성공하였습니다"));
     }
 
     @PostMapping("/vertify-email")
-    public ResponseEntity<ResponseDto> mailSendForJoin(@RequestBody @Validated JoinMailDto mailDto) {
+    public ResponseEntity<ResponseDto> mailSendForJoin(@RequestBody @Validated JoinMailRequestDto mailDto) {
         mailService.joinEmail(mailDto.getUsername()); //사용자에게 메일 전송
         return ResponseEntity
                 .status(HttpStatus.OK)

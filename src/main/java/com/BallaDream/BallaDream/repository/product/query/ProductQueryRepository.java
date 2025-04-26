@@ -1,8 +1,10 @@
 package com.BallaDream.BallaDream.repository.product.query;
 
-import com.BallaDream.BallaDream.domain.enums.DiagnosisType;
+import com.BallaDream.BallaDream.domain.enums.DiagnoseType;
 import com.BallaDream.BallaDream.domain.enums.Level;
-import com.BallaDream.BallaDream.dto.RecommendProductQueryDto;
+import com.BallaDream.BallaDream.domain.product.Product;
+import com.BallaDream.BallaDream.domain.product.QGuide;
+import com.BallaDream.BallaDream.dto.product.RecommendProductQueryDto;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -25,7 +27,7 @@ public class ProductQueryRepository {
 
     private final JPAQueryFactory queryFactory;
 
-    private List<Long> getProductIds(DiagnosisType diagnosisType, String formulation, Integer minPrice, Integer maxPrice,
+    private List<Long> getProductIds(DiagnoseType diagnoseType, String formulation, Integer minPrice, Integer maxPrice,
                                      int offset, int limit) {
         return queryFactory
                 .select(product.id)
@@ -34,7 +36,7 @@ public class ProductQueryRepository {
                 .join(guide).on(productGuide.guide.id.eq(guide.id))
                 .where(
                         guide.level.eq(Level.CAUTION),
-                        guide.diagnosisType.eq(diagnosisType),
+                        guide.diagnoseType.eq(diagnoseType),
                         formulationEq(formulation),
                         priceBetween(minPrice, maxPrice)
                 )
@@ -44,11 +46,11 @@ public class ProductQueryRepository {
     }
 
     //추천 상품에 대한 정보를 반환
-    public List<RecommendProductQueryDto> recommendProduct(Long userId, DiagnosisType diagnosisType,
+    public List<RecommendProductQueryDto> recommendProduct(Long userId, DiagnoseType diagnoseType,
                                                            String formulation, Integer minPrice, Integer maxPrice,
                                                            int offset, int limit) {
 
-        List<Long> productIds = getProductIds(diagnosisType, formulation, minPrice, maxPrice, offset, limit);
+        List<Long> productIds = getProductIds(diagnoseType, formulation, minPrice, maxPrice, offset, limit);
 
         return queryFactory
                 .select(Projections.constructor(RecommendProductQueryDto.class,
@@ -66,32 +68,16 @@ public class ProductQueryRepository {
                 .leftJoin(interestedProduct).on(product.id.eq(interestedProduct.product.id))
                 .where(product.id.in(productIds))
                 .fetch();
+    }
 
- /*       return queryFactory
-                .select(Projections.constructor(RecommendProductQueryDto.class,
-                        product.productName,
-                        product.formulation,
-                        product.price,
-                        product.salesLink,
-                        product.imageLink,
-                        element.elementName,
-                        interestedProduct.id.isNotNull() // 관심 여부 boolean 처리
-                ))
+    public Product findByIdAndDiagnoseType(Long id, DiagnoseType diagnoseType) {
+        return queryFactory
+                .select(product)
                 .from(product)
                 .join(productGuide).on(product.id.eq(productGuide.product.id))
-                .join(element).on(product.id.eq(element.product.id))
                 .join(guide).on(productGuide.guide.id.eq(guide.id))
-                .leftJoin(interestedProduct)
-                .on(product.id.eq(interestedProduct.product.id)
-                        .and(interestedProduct.user.id.eq(userId)) //추천 화장품을 요청한 사용자 pk
-                        .and(interestedProduct.diagnosisType.eq(diagnosisType))) //추천 화장품의 종류 ex) 색소침착, 주름..
-                .where(
-                        guide.level.eq(Level.CAUTION),
-                        guide.diagnosisType.eq(DiagnosisType.DRY),
-                        formulationEq(formulation),
-                        priceBetween(minPrice, maxPrice)
-                )
-                .fetch();*/
+                .where(product.id.eq(id).and(guide.diagnoseType.eq(diagnoseType)))
+                .fetchOne();
     }
 
     private BooleanExpression formulationEq(String formulationCond) {

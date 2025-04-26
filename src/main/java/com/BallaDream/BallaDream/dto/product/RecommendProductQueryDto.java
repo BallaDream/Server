@@ -1,4 +1,4 @@
-package com.BallaDream.BallaDream.dto;
+package com.BallaDream.BallaDream.dto.product;
 
 import com.querydsl.core.annotations.QueryProjection;
 import lombok.Data;

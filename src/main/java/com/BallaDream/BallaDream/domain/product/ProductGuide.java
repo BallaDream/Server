@@ -27,4 +27,12 @@ public class ProductGuide {
         this.product = product;
         this.guide = guide;
     }
+
+    public void associateProduct(Product product) {
+        product.getProductGuides().add(this);
+    }
+
+    public void associateGuide(Guide guide) {
+        guide.getProductGuides().add(this);
+    }
 }
