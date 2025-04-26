@@ -13,11 +13,13 @@ import com.BallaDream.BallaDream.repository.product.ProductGuideRepository;
 import com.BallaDream.BallaDream.repository.product.query.ProductQueryRepository;
 import com.BallaDream.BallaDream.repository.user.UserRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class InterestedProductService {
@@ -33,6 +35,7 @@ public class InterestedProductService {
 
         //관심있는 상품이 이미 등록되어 있는지 확인
         Optional<InterestedProduct> interestedProductOpt = productRepository.findByUserAndDiagnoseType(user, diagnoseType);
+        log.info("bug fix: {} {}", user.getId(), diagnoseType);
         if (interestedProductOpt.isPresent()) {
             throw new AlreadyInterestedProductException();
         }
