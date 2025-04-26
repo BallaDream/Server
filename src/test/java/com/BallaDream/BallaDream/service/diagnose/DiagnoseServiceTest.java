@@ -35,7 +35,7 @@ class DiagnoseServiceTest {
 
         //given
         DiagnoseResultDto dto = new DiagnoseResultDto();
-        Map<DiagnosisType, Level> userSkinLevel = dto.getResults(); //임의로 피부 진단 결과 생성
+        Map<DiagnosisType, Level> userSkinLevel = dto.getData(); //임의로 피부 진단 결과 생성
         userSkinLevel.put(DiagnosisType.DRY, Level.CAUTION);
         userSkinLevel.put(DiagnosisType.ACNE, Level.CLEAR);
         User user = new User();

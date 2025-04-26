@@ -1,5 +1,6 @@
 package com.BallaDream.BallaDream.domain.product;
 
+import com.BallaDream.BallaDream.domain.enums.DiagnosisType;
 import com.BallaDream.BallaDream.domain.user.User;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -19,7 +20,7 @@ public class InterestedProduct {
 
     private String productName;
 
-    private String type; //Todo enum or String 생각할 것
+    private DiagnosisType diagnosisType; //Todo enum or String 생각할 것
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "product_id")

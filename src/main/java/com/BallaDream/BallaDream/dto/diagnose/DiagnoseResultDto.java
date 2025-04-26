@@ -14,5 +14,4 @@ import java.util.Map;
 @AllArgsConstructor
 public class DiagnoseResultDto {
     private Map<DiagnosisType, Level> data = new HashMap<>();
-//    private Map<String, String> data = new HashMap<>();
 }

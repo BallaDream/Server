@@ -37,8 +37,8 @@ public class DiagnoseService {
         Diagnose diagnose = new Diagnose(user);
         List<UserSkinLevel> userSkinLevelList = new ArrayList<>(); //저장할 피부 진단 결과 리스트
         Map<DiagnosisType, Level> diagnoseResult = resultDto.getData();
+        //피부 진단 결과들에 대한 엔티티 생성
         diagnoseResult.forEach(((diagnosisType, level) -> {
-            log.info("사용자 피부 진단: {} {}", diagnosisType, level);
             userSkinLevelList.add(new UserSkinLevel(diagnose, level, diagnosisType));
         }));
 

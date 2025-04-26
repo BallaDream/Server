@@ -28,7 +28,7 @@ public class JoinController {
         joinService.webJoinProcess(joinDto);
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(new ResponseDto(HttpStatus.OK.value(), "회원가입을 성공하였습니다"));
+                .body(ResponseDto.of(HttpStatus.OK, "회원가입을 성공하였습니다"));
     }
 
     @PostMapping("/vertify-email")
@@ -36,6 +36,6 @@ public class JoinController {
         mailService.joinEmail(mailDto.getUsername()); //사용자에게 메일 전송
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(new ResponseDto(HttpStatus.OK.value(), "인증번호를 전송하였습니다"));
+                .body(ResponseDto.of(HttpStatus.OK, "인증번호를 전송하였습니다"));
     }
 }

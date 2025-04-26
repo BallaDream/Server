@@ -26,7 +26,6 @@ public class DiagnoseController {
     @PreAuthorize("hasRole('USER')")
     @PostMapping("/diagnose")
     public ResponseEntity<ResponseDto> saveDiagnoseResult(@RequestBody DiagnoseResultDto resultDto) {
-        log.info("받은 데이터 개수: {}", resultDto.getData().size());
         String username = userService.getUsernameInToken();
         diagnoseService.saveDiagnose(resultDto, username);
         return ResponseEntity
