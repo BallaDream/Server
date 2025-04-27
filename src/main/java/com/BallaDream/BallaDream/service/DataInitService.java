@@ -13,6 +13,7 @@ import com.BallaDream.BallaDream.repository.product.ProductGuideRepository;
 import com.BallaDream.BallaDream.repository.product.ProductRepository;
 import com.opencsv.CSVReader;
 import com.opencsv.exceptions.CsvValidationException;
+import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -58,7 +59,7 @@ public class DataInitService {
         }
     }
 
-//    @PostConstruct
+    @PostConstruct
     public void csvToDb() {
         readCSV("data/guide.csv", this::makeGuideWithLine, guideRepository);
         readCSV("data/product.csv", this::makeProductWithLine, productRepository);

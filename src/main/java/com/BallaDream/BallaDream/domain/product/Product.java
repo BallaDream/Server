@@ -33,8 +33,8 @@ public class Product {
     @OneToMany(mappedBy = "product")
     private List<Element> elements = new ArrayList<>();
 
-    @OneToOne(mappedBy = "product")
-    private InterestedProduct interestedProduct;
+    @OneToMany(mappedBy = "product")
+    private List<InterestedProduct> interestedProducts = new ArrayList<>();
 
     public Product() {
     }
@@ -46,10 +46,5 @@ public class Product {
         this.salesLink = salesLink;
         this.imageLink = imageLink;
         this.formulation = formulation;
-    }
-
-    //연관 관계 메서드
-    public void associateInterestedProduct(InterestedProduct interestedProduct) {
-        this.interestedProduct = interestedProduct;
     }
 }

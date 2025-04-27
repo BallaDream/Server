@@ -22,7 +22,7 @@ public class InterestedProduct {
     @Enumerated(EnumType.STRING)
     private DiagnoseType diagnoseType;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "product_id")
     private Product product;
 
@@ -41,6 +41,6 @@ public class InterestedProduct {
     }
 
     public void associateProduct(Product product) {
-        product.associateInterestedProduct(this); //연관 관계 매핑
+        product.getInterestedProducts().add(this);
     }
 }

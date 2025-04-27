@@ -29,21 +29,25 @@ public class InterestedProductService {
     private final ProductQueryRepository productQueryRepository;
     private final UserRepository userRepository;
 
+    //Todo 하나 이상의 제품을 등록할 수 없는 버그가 생김
     public void addInterestedProduct(Long id, DiagnoseType diagnoseType, String username) {
         User user = userRepository.findByUsername(username).orElseThrow(
                 () -> new UserException(ResponseCode.INVALID_USER));
 
-        //관심있는 상품이 이미 등록되어 있는지 확인
-        Optional<InterestedProduct> interestedProductOpt = productRepository.findByUserAndDiagnoseType(user, diagnoseType);
-        log.info("bug fix: {} {}", user.getId(), diagnoseType);
-        if (interestedProductOpt.isPresent()) {
-            throw new AlreadyInterestedProductException();
-        }
 
         //상품과 그 상품의 피부 진단 종류가 일치하는지 확인
         Product product = productQueryRepository.findByIdAndDiagnoseType(id, diagnoseType);
         if (product == null) {
             throw new InvalidInputException(); //일치하지 않는 경우 예외 발생
+        }
+
+        //관심있는 상품이 이미 등록되어 있는지 확인
+        Optional<InterestedProduct> interestedProductOpt = productRepository.
+                findByUserAndProductAndDiagnoseType(user, product, diagnoseType);
+        if (interestedProductOpt.isPresent()) {
+            InterestedProduct data = interestedProductOpt.get();
+            log.info("bug fix: {} {} {}", data.getUser().getId(), data.getProduct().getId(), data.getDiagnoseType());
+            throw new AlreadyInterestedProductException();
         }
 
         //관심 제품 등록
