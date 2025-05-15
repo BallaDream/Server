@@ -1,10 +1,6 @@
 package com.BallaDream.BallaDream.service.diagnose;
 
-import com.BallaDream.BallaDream.constants.DiagnoseScore;
 import com.BallaDream.BallaDream.domain.diagnose.Diagnose;
-import com.BallaDream.BallaDream.domain.diagnose.UserSkinLevel;
-import com.BallaDream.BallaDream.domain.enums.DiagnoseType;
-import com.BallaDream.BallaDream.domain.enums.Level;
 import com.BallaDream.BallaDream.domain.user.User;
 import com.BallaDream.BallaDream.dto.diagnose.*;
 import com.BallaDream.BallaDream.exception.diagnose.DiagnoseNotFoundException;
@@ -23,11 +19,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 import static com.BallaDream.BallaDream.constants.DiagnoseScore.*;
 import static com.BallaDream.BallaDream.constants.ResponseCode.*;
-import static com.BallaDream.BallaDream.domain.enums.Level.*;
 
 @Slf4j
 @Service
@@ -94,14 +88,16 @@ public class DiagnoseService {
     //단일 진단 결과 조회
     public UserDiagnoseResultResponseDto getUserDiagnose(Long userId, Long diagnoseId) {
 
-        Optional<Diagnose> diagnose = diagnoseRepository.findByIdAndUserId(diagnoseId, userId);
+        Optional<Diagnose> findDiagnose = diagnoseRepository.findByIdAndUserId(diagnoseId, userId);
 
         //열람하고자 하는 기록이 사용자의 진단 기록이 아닌 경우
-        if (diagnose.isEmpty()) {
+        if (findDiagnose.isEmpty()) {
             throw new DiagnoseOwnershipException();
         }
 
-        return new UserDiagnoseResultResponseDto(diagnose.get().addUserSkinLevel());
+        Diagnose diagnose = findDiagnose.get();
+
+        return new UserDiagnoseResultResponseDto(diagnose.getSpecificUserSkinLevel(), diagnose.getTotalUserSkinLevel());
     }
 
     /*//단일 진단 결과 조회
@@ -139,38 +135,32 @@ public class DiagnoseService {
             throw new DiagnoseNotFoundException();
         }
 
-        List<UserSkinLevel> skinLevelList = levelRepository.findByDiagnoseId(diagnose.getId());
+        /*List<UserSkinLevel> skinLevelList = levelRepository.findByDiagnoseId(diagnose.getId());
         if (skinLevelList.isEmpty()) {
             throw new DiagnoseNotFoundException();
-        }
+        }*/
 
         // DiagnosisType과 Level을 Map으로 매핑
-        Map<DiagnoseType, Level> dataMap = skinLevelList.stream()
+        /*Map<DiagnoseType, Level> dataMap = skinLevelList.stream()
                 .collect(Collectors.toMap(
                         UserSkinLevel::getDiagnoseType,
-                        UserSkinLevel::getLevel));
+                        UserSkinLevel::getLevel));*/
 
-        return new MyPageDiagnoseResponseDto(diagnose.getDate(), dataMap);
+        return new MyPageDiagnoseResponseDto(diagnose.getDate(), diagnose.getTotalUserSkinLevel());
     }
 
     //사용자의 진단 기록을 모두 보내준다. (마이페이지 진단 이력)
     public UserAllDiagnoseResponseDto getAllDiagnose(Long userId, boolean isLatest) {
 
-        User user = userRepository.findById(userId).orElseThrow(() -> new UserException(INVALID_USER));
         //when: 한페이지당 보여줄 데이터는 6개
         PageRequest pageRequest = getMyAllDiagnosePageRequest(isLatest);
-        Page<Diagnose> page = diagnoseRepository.findByUser(user, pageRequest);
+        Page<Diagnose> page = diagnoseRepository.findByUserId(userId, pageRequest);
         List<Diagnose> content = page.getContent();
 
         //dto 만들기
         List<UserAllDiagnoseDto> data = new ArrayList<>();
         for (Diagnose diagnose : content) {
-            List<UserSkinLevel> skinLevelList = diagnose.getSkinLevelList();
-            Map<DiagnoseType, Level> diagnoseResult = new HashMap<>();
-            for (UserSkinLevel sl : skinLevelList) {
-                diagnoseResult.put(sl.getDiagnoseType(), sl.getLevel());
-            }
-            data.add(new UserAllDiagnoseDto(diagnose.getId(), diagnose.getDate(), diagnoseResult));
+            data.add(new UserAllDiagnoseDto(diagnose.getId(), diagnose.getDate(), diagnose.getTotalUserSkinLevel()));
         }
 
         return UserAllDiagnoseResponseDto.builder()

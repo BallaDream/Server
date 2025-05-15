@@ -7,12 +7,8 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -91,7 +87,25 @@ public class Diagnose {
         user.getDiagnoses().add(this); //연관 관계
     }
 
-    public Map<DiagnoseType, Level> addUserSkinLevel() {
+    //진단 세부 정보를 반환
+    public Map<String, Level> getSpecificUserSkinLevel() {
+        Map<String, Level> result = new HashMap<>();
+        result.put("dryLipsLevel", dryLipsLevel);
+        result.put("pigmentForeheadLevel", pigmentForeheadLevel);
+        result.put("pigmentLeftCheekLevel", pigmentLeftCheekLevel);
+        result.put("pigmentRightCheekLevel", pigmentRightCheekLevel);
+        result.put("wrinkleForeheadLevel", wrinkleForeheadLevel);
+        result.put("wrinkleGlabellaLevel", wrinkleGlabellaLevel);
+        result.put("wrinkleLeftEyeLevel", wrinkleLeftEyeLevel);
+        result.put("wrinkleRightEyeLevel", wrinkleRightEyeLevel);
+        result.put("elasticJawlineSaggingLevel", elasticJawlineSaggingLevel);
+        result.put("poreLeftCheekLevel", poreLeftCheekLevel);
+        result.put("poreRightCheekLevel", poreRightCheekLevel);
+        return result;
+    }
+
+    //진단 집계 결과를 반환
+    public Map<DiagnoseType, Level> getTotalUserSkinLevel() {
         Map<DiagnoseType, Level> result = new HashMap<>();
         //입술 건조도 진단 결과
         result.put(DRY, dryLipsLevel);

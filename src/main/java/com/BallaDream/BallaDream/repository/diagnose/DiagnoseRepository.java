@@ -17,6 +17,7 @@ public interface DiagnoseRepository extends JpaRepository<Diagnose, Long> {
     boolean existsByUser(User user);
 
     Page<Diagnose> findByUser(User user, Pageable pageable);
+    Page<Diagnose> findByUserId(Long userId, Pageable pageable);
 
     Optional<Diagnose> findByIdAndUserId(Long diagnoseId, Long userId);
 }
