@@ -30,29 +30,7 @@ public class DiagnoseService {
 
     private final DiagnoseRepository diagnoseRepository;
     private final DiagnoseQueryRepository diagnoseQueryRepository;
-    private final UserSkinLevelRepository levelRepository;
     private final UserRepository userRepository;
-
-    //피부 진단 결과 저장
-    //Todo diagnoseResult 에서 겹치는 DiagnoseType 있는지 점검하기
-    /*@Transactional
-    public void saveDiagnose(Map<DiagnoseType, Level> diagnoseResult, String username) {
-        User user = userRepository.findByUsername(username).orElseThrow(
-                () -> new UserException(INVALID_USER));
-
-        Diagnose diagnose = new Diagnose(user);
-        diagnose.associateUser(user);
-        List<UserSkinLevel> userSkinLevelList = new ArrayList<>(); //저장할 피부 진단 결과 리스트
-        //피부 진단 결과들에 대한 엔티티 생성
-        diagnoseResult.forEach(((diagnosisType, level) -> {
-            UserSkinLevel skinLevel = new UserSkinLevel(diagnose, level, diagnosisType);
-            skinLevel.associateDiagnose(diagnose);
-            userSkinLevelList.add(skinLevel);
-        }));
-
-        diagnoseRepository.save(diagnose);
-        levelRepository.saveAll(userSkinLevelList);
-    }*/
 
     //진단 기록 저장하기
     @Transactional
@@ -78,11 +56,7 @@ public class DiagnoseService {
 
         diagnose.createDate(); //날짜 기입
         diagnose.associateUser(user); //연관 관계 셋팅
-        Diagnose saveDiagnose = diagnoseRepository.save(diagnose);
-
-
-
-        return saveDiagnose;
+        return diagnoseRepository.save(diagnose);
     }
 
     //단일 진단 결과 조회
@@ -96,7 +70,6 @@ public class DiagnoseService {
         }
 
         Diagnose diagnose = findDiagnose.get();
-
         return new UserDiagnoseResultResponseDto(diagnose.getSpecificUserSkinLevel(), diagnose.getTotalUserSkinLevel());
     }
 
@@ -165,6 +138,7 @@ public class DiagnoseService {
 
         return UserAllDiagnoseResponseDto.builder()
                 .data(data)
+                .totalCount(page.getTotalElements())
                 .totalPage(page.getTotalPages())
                 .currentPage(page.getNumber())
                 .build();

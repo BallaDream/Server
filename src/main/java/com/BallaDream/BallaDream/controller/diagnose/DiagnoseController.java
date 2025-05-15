@@ -1,6 +1,7 @@
 package com.BallaDream.BallaDream.controller.diagnose;
 
 import com.BallaDream.BallaDream.domain.diagnose.Diagnose;
+import com.BallaDream.BallaDream.domain.enums.DiagnoseType;
 import com.BallaDream.BallaDream.dto.diagnose.*;
 import com.BallaDream.BallaDream.dto.message.ResponseDto;
 import com.BallaDream.BallaDream.service.diagnose.DiagnoseService;
@@ -59,9 +60,9 @@ public class DiagnoseController {
     //사용자의 모든 피부 진단 기록을 반환한다.
     @PreAuthorize("hasRole('USER')")
     @GetMapping("/mypage/diagnoses")
-    public UserAllDiagnoseResponseDto getALLDiagnose() {
+    public UserAllDiagnoseResponseDto getALLDiagnose(@RequestParam boolean isLatest) {
         Long userId = userService.getUserId();
-        return diagnoseService.getAllDiagnose(userId, true); //Todo 최신 여부를 입력받고 반환하기
+        return diagnoseService.getAllDiagnose(userId, isLatest); //Todo 최신 여부를 입력받고 반환하기
     }
 
 }

@@ -15,5 +15,6 @@ import java.util.List;
 public class UserAllDiagnoseResponseDto {
     private int totalPage;
     private int currentPage;
+    private Long totalCount;
     private List<UserAllDiagnoseDto> data = new ArrayList<>();
 }
