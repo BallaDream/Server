@@ -28,18 +28,21 @@ public class ProductService {
     private final UserRepository userRepository;
     private final ProductRepository productRepository;
 
-    public RecommendationProductResponseDto createRecommend(DiagnoseType diagnoseType,
+    //피부 진단 직후, 화장품을 추천
+    public RecommendationProductResponseDto createRecommend(Long userId, DiagnoseType diagnoseType,
                                                             String formulation, Integer minPrice, Integer maxPrice,
                                                             int step) {
-        String username = userService.getUsernameInToken();
-        User user = userRepository.findByUsername(username).orElseThrow(() ->
-                new UserException(ResponseCode.INVALID_USER));
+//        String username = userService.getUsernameInToken();
+//        Long userId = userService.getUserId();
+//        User user = userRepository.findByUsername(username).orElseThrow(() ->
+//                new UserException(ResponseCode.INVALID_USER));
 
-        List<RecommendProductQueryDto> queryDto = productQueryRepository.recommendProduct(user.getId(), diagnoseType,
+        //Todo 몇개씩 데이터를 전달할 것인지 정할것
+        List<RecommendProductQueryDto> queryDto = productQueryRepository.recommendProduct(userId, diagnoseType,
                 formulation, minPrice, maxPrice, step * 8, 8);
 
         List<RecommendProductDto> result = mapToRecommendProductDto(queryDto);
-        return new RecommendationProductResponseDto("ha", result);
+        return new RecommendationProductResponseDto(result);
     }
 
     private List<RecommendProductDto> mapToRecommendProductDto(List<RecommendProductQueryDto> queryDto) {

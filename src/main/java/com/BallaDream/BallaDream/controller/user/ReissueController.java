@@ -1,18 +1,13 @@
 package com.BallaDream.BallaDream.controller.user;
 
-import com.BallaDream.BallaDream.constants.TokenType;
 import com.BallaDream.BallaDream.dto.message.ResponseDto;
 import com.BallaDream.BallaDream.jwt.JWTUtil;
-import com.BallaDream.BallaDream.service.ReissueService;
-import io.jsonwebtoken.ExpiredJwtException;
-import jakarta.servlet.http.Cookie;
+import com.BallaDream.BallaDream.service.user.ReissueService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
-import org.antlr.v4.runtime.Token;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -28,16 +23,18 @@ public class ReissueController {
     @PostMapping("/reissue")
     public ResponseEntity<ResponseDto> reissue(HttpServletRequest request, HttpServletResponse response) {
 
+        String newAccessToken = reissueService.reissueAccessToken(request);
+
+        response.setHeader("access", newAccessToken);
+        return ResponseEntity.ok(new ResponseDto(HttpStatus.OK.value(), "access 토큰이 재발급되었습니다."));
+    }
+
+
+    /*@PostMapping("/reissue")
+    public ResponseEntity<ResponseDto> reissue(HttpServletRequest request, HttpServletResponse response) {
+
         //get refresh tokenz
         String refresh = reissueService.getTokenInCookie(request);
-/*
-        Cookie[] cookies = request.getCookies();
-        for (Cookie cookie : cookies) {
-            if (cookie.getName().equals(REFRESH_TOKEN.getType())) {
-                refresh = cookie.getValue();
-            }
-        }
-*/
         //토큰이 존재하지 않는 경우
         if (refresh == null) {
             return ResponseEntity
@@ -72,5 +69,5 @@ public class ReissueController {
         //response
         response.setHeader("access", newAccess);
         return new ResponseEntity<>(HttpStatus.OK);
-    }
+    }*/
 }

@@ -17,4 +17,8 @@ public interface InterestedProductRepository extends JpaRepository<InterestedPro
 
     @Modifying
     void deleteByUserAndDiagnoseType(User user, DiagnoseType diagnoseType);
+
+    @Modifying
+    void deleteByUserAndDiagnoseTypeAndProduct(User user, DiagnoseType diagnoseType, Product product);
+
 }

@@ -18,7 +18,6 @@ public class OpenController {
 
     @PostMapping("/test")
     public String test(@RequestBody RecommendationProductResponseDto dto) {
-        log.info("test: {}", dto.getDescription());
         log.info("test: {}", dto.getData().get(0).getProductName());
         log.info("test: {}", dto.getData().get(0).getElement().size());
         log.info("test: {}", dto.getData().get(1).getProductName());

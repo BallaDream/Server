@@ -8,6 +8,5 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 public class RecommendationProductResponseDto {
-    private String description;
     private List<RecommendProductDto> data;
 }

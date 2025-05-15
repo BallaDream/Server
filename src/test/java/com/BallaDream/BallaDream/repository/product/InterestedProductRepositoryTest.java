@@ -69,7 +69,8 @@ class InterestedProductRepositoryTest {
         interestedProductRepository.save(interestedProduct);
 
         //when
-        interestedProductRepository.deleteByUserAndDiagnoseType(user, DiagnoseType.ACNE);
+//        interestedProductRepository.deleteByUserAndDiagnoseType(user, DiagnoseType.ACNE);
+        interestedProductRepository.deleteByUserAndDiagnoseTypeAndProduct(user, DiagnoseType.ACNE, product);
 
         //then
         Optional<InterestedProduct> result = interestedProductRepository.findById(interestedProduct.getId());

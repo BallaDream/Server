@@ -19,6 +19,7 @@ public class InterestedProductController {
     private final InterestedProductService productService;
     private final UserService userService;
 
+    //관심 있는 화장품을 등록
     @PreAuthorize("hasRole('USER')")
     @PostMapping("/interested-product")
     public ResponseEntity<ResponseDto> addInterestedProduct(@RequestBody @Validated InterestedProductRequestDto interestedProductDto) {
@@ -31,6 +32,7 @@ public class InterestedProductController {
                 .body(ResponseDto.of(HttpStatus.OK, "관심 상품을 등록하였습니다."));
     }
 
+    //관심 있는 화장품을 해제
     @PreAuthorize("hasRole('USER')")
     @DeleteMapping("/interested-product")
     public ResponseEntity<ResponseDto> deleteInterestedProduct(

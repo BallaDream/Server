@@ -12,7 +12,12 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 import static org.assertj.core.api.Assertions.*;
 
@@ -66,5 +71,50 @@ class DiagnoseRepositoryTest {
         //then
         assertThat(isExist1).isTrue();
         assertThat(isExist2).isFalse();
+    }
+
+    @Test
+    @DisplayName("사용자의 모든 진단 기록을 조회하기")
+    @Transactional
+    void pagingUserDiagnose() {
+
+        //given
+        User user = new User();
+        userRepository.save(user);
+        //3개의 진단 기록 저장
+        Diagnose diagnose1 = new Diagnose(user);
+        diagnoseRepository.save(diagnose1);
+        Diagnose diagnose2 = new Diagnose(user);
+        diagnoseRepository.save(diagnose2);
+        Diagnose diagnose3 = new Diagnose(user);
+        diagnoseRepository.save(diagnose3);
+        //진단 기록에 따른 피부 등급 저장
+        UserSkinLevel skinLevel1 = new UserSkinLevel(diagnose1, Level.CAUTION, DiagnoseType.ACNE);
+        skinLevel1.associateDiagnose(diagnose1);
+        levelRepository.save(skinLevel1);
+        UserSkinLevel skinLevel2 = new UserSkinLevel(diagnose2, Level.CLEAR, DiagnoseType.DRY);
+        skinLevel2.associateDiagnose(diagnose2);
+        levelRepository.save(skinLevel2);
+        UserSkinLevel skinLevel3 = new UserSkinLevel(diagnose3, Level.WARNING, DiagnoseType.PIGMENT);
+        skinLevel3.associateDiagnose(diagnose3);
+        levelRepository.save(skinLevel3);
+        em.flush();
+        em.clear();
+
+        //when: 한페이지당 보여줄 데이터는 6개 + 최신순으로
+        PageRequest pageRequest = PageRequest.of(0, 6, Sort.by(Sort.Direction.DESC, "date"));
+        Page<Diagnose> page = diagnoseRepository.findByUser(user, pageRequest);
+
+        //then
+        List<Diagnose> result = page.getContent();
+        for (Diagnose diagnose : result) {
+            List<UserSkinLevel> skinLevelList = diagnose.getSkinLevelList();
+            for (UserSkinLevel skinLevel : skinLevelList) {
+                log.info("data: {}", skinLevel.getDiagnoseType());
+            }
+        }
+//        assertThat(result.size()).isEqualTo(3);
+//        assertThat(page.getTotalPages()).isEqualTo(1);
+//        assertThat(page.isFirst()).isTrue();
     }
 }

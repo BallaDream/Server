@@ -3,7 +3,10 @@ package com.BallaDream.BallaDream.jwt;
 import com.BallaDream.BallaDream.common.CookieUtil;
 import com.BallaDream.BallaDream.common.RedisUtil;
 import com.BallaDream.BallaDream.common.ResponseUtil;
+import com.BallaDream.BallaDream.constants.RedisExpiredTime;
 import com.BallaDream.BallaDream.constants.TokenType;
+import com.BallaDream.BallaDream.domain.user.User;
+import com.BallaDream.BallaDream.dto.security.CustomUserDetails;
 import com.BallaDream.BallaDream.dto.user.UserDto;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.FilterChain;
@@ -28,6 +31,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.Collection;
 import java.util.Iterator;
 
+import static com.BallaDream.BallaDream.constants.RedisExpiredTime.*;
 import static com.BallaDream.BallaDream.constants.ResponseCode.INVALID_LOGIN_PARAMETER;
 import static com.BallaDream.BallaDream.constants.ResponseCode.LOGIN_FAIL;
 import static com.BallaDream.BallaDream.constants.TokenType.ACCESS_TOKEN;
@@ -75,7 +79,9 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
     protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authentication) throws IOException, ServletException {
 
         //유저 정보
-        String username = authentication.getName();
+//        String username = authentication.getName();
+        CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
+        User user = userDetails.getUser();
 
         Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
         Iterator<? extends GrantedAuthority> iterator = authorities.iterator();
@@ -83,11 +89,16 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
         String role = auth.getAuthority();
 
         //토큰 생성
-        String accessToken = jwtUtil.createJwt(ACCESS_TOKEN, username, role, jwtUtil.getAccessTokenExpiredTime());
-        String refreshToken = jwtUtil.createJwt(REFRESH_TOKEN, username, role, jwtUtil.getRefreshTokenExpiredTime());
+//        String accessToken = jwtUtil.createJwt(ACCESS_TOKEN, username, role, jwtUtil.getAccessTokenExpiredTime());
+        String accessToken = jwtUtil.createJwt(ACCESS_TOKEN, user.getUsername(), role, user.getNickname(),
+                user.getLoginType(), jwtUtil.getAccessTokenExpiredTime());
+        String refreshToken = jwtUtil.createJwt(REFRESH_TOKEN, user.getUsername(), role, user.getNickname(),
+                user.getLoginType(), jwtUtil.getAccessTokenExpiredTime());
 
         //refresh 토큰 저장
-        redisUtil.setDataExpire(refreshToken, username, jwtUtil.getRefreshTokenExpiredTime());
+        redisUtil.setDataExpire(refreshToken, user.getUsername(), jwtUtil.getRefreshTokenExpiredTime() / 1000);
+        //빠른 조회를 위한 user_id 저장
+        redisUtil.setDataExpire(user.getUsername(), String.valueOf(user.getId()), USER_CACHE_EXPIRE_SECONDS); // 1시간
 
         //응답 설정
         response.setHeader(ACCESS_TOKEN.getType(), accessToken);

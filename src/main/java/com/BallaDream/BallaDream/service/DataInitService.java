@@ -43,11 +43,11 @@ public class DataInitService {
                 throw new FileNotFoundException("리소스를 찾을 수 없습니다: " + classpath);
             }
 
-            String[] line;
+            String[] line; //csv 파일 행 데이터
             int idx = 0;
             List<T> result = new ArrayList<>();
             while ((line = csvReader.readNext()) != null) {
-                if (idx != 0) {
+                if (idx != 0) { //첫번째 줄은 컬럼명이므로 건너뛴다.
                     result.add(mapper.apply(line));
                 }
                 idx++;
@@ -59,7 +59,7 @@ public class DataInitService {
         }
     }
 
-    @PostConstruct
+//    @PostConstruct
     public void csvToDb() {
         readCSV("data/guide.csv", this::makeGuideWithLine, guideRepository);
         readCSV("data/product.csv", this::makeProductWithLine, productRepository);

@@ -1,6 +1,8 @@
 package com.BallaDream.BallaDream.controller.diagnose;
 
 import com.BallaDream.BallaDream.dto.diagnose.DiagnoseResultRequestDto;
+import com.BallaDream.BallaDream.dto.diagnose.MyPageDiagnoseResponseDto;
+import com.BallaDream.BallaDream.dto.diagnose.UserAllDiagnoseResponseDto;
 import com.BallaDream.BallaDream.dto.diagnose.UserDiagnoseResultResponseDto;
 import com.BallaDream.BallaDream.dto.message.ResponseDto;
 import com.BallaDream.BallaDream.service.diagnose.DiagnoseService;
@@ -35,8 +37,24 @@ public class DiagnoseController {
     @PreAuthorize("hasRole('USER')")
     @GetMapping("/diagnose/{id}")
     public UserDiagnoseResultResponseDto getDiagnosisResult(@PathVariable(name = "id") Long id) {
-        log.info("id: {}", id);
         String username = userService.getUsernameInToken();
         return diagnoseService.getUserDiagnose(id, username);
     }
+
+    //사용자의 가장 최근의 피부 진단 기록을 반환한다.
+    @PreAuthorize("hasRole('USER')")
+    @GetMapping("/mypage/diagnose")
+    public MyPageDiagnoseResponseDto getLatestDiagnose() {
+        Long userId = userService.getUserId();
+        return diagnoseService.getLatestDiagnose(userId);
+    }
+
+    //사용자의 모든 피부 진단 기록을 반환한다.
+    @PreAuthorize("hasRole('USER')")
+    @GetMapping("/mypage/diagnoses")
+    public UserAllDiagnoseResponseDto getALLDiagnose() {
+        Long userId = userService.getUserId();
+        return diagnoseService.getAllDiagnose(userId, true); //Todo 최신 여부를 입력받고 반환하기
+    }
+
 }
