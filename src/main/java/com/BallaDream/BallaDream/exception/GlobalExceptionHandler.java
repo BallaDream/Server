@@ -2,6 +2,8 @@ package com.BallaDream.BallaDream.exception;
 
 import com.BallaDream.BallaDream.dto.message.ErrorDto;
 import com.BallaDream.BallaDream.dto.message.ResponseDto;
+import com.BallaDream.BallaDream.exception.diagnose.DiagnoseException;
+import com.BallaDream.BallaDream.exception.product.ProductException;
 import com.BallaDream.BallaDream.exception.token.TokenException;
 import com.BallaDream.BallaDream.exception.user.InvalidInputException;
 import com.BallaDream.BallaDream.exception.user.UserException;
@@ -24,7 +26,7 @@ public class GlobalExceptionHandler {
      * @
      * @return
      */
-    @ExceptionHandler(value = {UserException.class, TokenException.class})
+    @ExceptionHandler(value = {UserException.class, TokenException.class, DiagnoseException.class, ProductException.class})
     public ResponseEntity<ResponseDto> handleException(BaseCustomException e) {
         return ResponseEntity
                 .status(e.getHttpStatus())

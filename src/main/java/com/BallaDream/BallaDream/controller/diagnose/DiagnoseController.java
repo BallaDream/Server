@@ -1,9 +1,7 @@
 package com.BallaDream.BallaDream.controller.diagnose;
 
-import com.BallaDream.BallaDream.dto.diagnose.DiagnoseResultRequestDto;
-import com.BallaDream.BallaDream.dto.diagnose.MyPageDiagnoseResponseDto;
-import com.BallaDream.BallaDream.dto.diagnose.UserAllDiagnoseResponseDto;
-import com.BallaDream.BallaDream.dto.diagnose.UserDiagnoseResultResponseDto;
+import com.BallaDream.BallaDream.domain.diagnose.Diagnose;
+import com.BallaDream.BallaDream.dto.diagnose.*;
 import com.BallaDream.BallaDream.dto.message.ResponseDto;
 import com.BallaDream.BallaDream.service.diagnose.DiagnoseService;
 import com.BallaDream.BallaDream.service.user.UserService;
@@ -12,6 +10,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 @Slf4j
@@ -23,7 +22,7 @@ public class DiagnoseController {
     private final DiagnoseService diagnoseService;
 
     //사용자의 피부 진단 기록을 저장함
-    @PreAuthorize("hasRole('USER')")
+/*    @PreAuthorize("hasRole('USER')")
     @PostMapping("/diagnose")
     public ResponseEntity<ResponseDto> saveDiagnoseResult(@RequestBody DiagnoseResultRequestDto resultDto) {
         String username = userService.getUsernameInToken();
@@ -31,14 +30,22 @@ public class DiagnoseController {
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(ResponseDto.of(HttpStatus.OK, "사용자 피부 진단 정보를 성공적으로 저장하였습니다."));
+    }  */
+
+    //사용자의 피부 진단 기록을 저장함
+    @PreAuthorize("hasRole('USER')")
+    @PostMapping("/diagnose")
+    public DiagnoseSaveResponseDto saveDiagnoseResult(@RequestBody @Validated DiagnoseSaveRequestDto resultDto) {
+        String username = userService.getUsernameInToken();
+        Diagnose saveDiagnose = diagnoseService.saveDiagnose(resultDto, username);
+        return new DiagnoseSaveResponseDto(HttpStatus.OK.value(), saveDiagnose.getId(), "피부 진단 결과가 저장되었습니다");
     }
 
     //사용자의 피부 진단 기록을 반환한다.
     @PreAuthorize("hasRole('USER')")
     @GetMapping("/diagnose/{id}")
     public UserDiagnoseResultResponseDto getDiagnosisResult(@PathVariable(name = "id") Long id) {
-        String username = userService.getUsernameInToken();
-        return diagnoseService.getUserDiagnose(id, username);
+        return diagnoseService.getUserDiagnose(userService.getUserId(), id);
     }
 
     //사용자의 가장 최근의 피부 진단 기록을 반환한다.

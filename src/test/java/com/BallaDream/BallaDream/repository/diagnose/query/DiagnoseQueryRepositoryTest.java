@@ -36,7 +36,7 @@ class DiagnoseQueryRepositoryTest {
         User user = new User();
         userRepository.save(user);
         //진단 1회
-        Diagnose diagnose1 = new Diagnose(user);
+        Diagnose diagnose1 = new Diagnose();
         diagnose1.associateUser(user);
         diagnoseRepository.save(diagnose1);
         //진단 1회 결과
@@ -48,7 +48,7 @@ class DiagnoseQueryRepositoryTest {
         levelRepository.save(l2);
 
         //진단 2회
-        Diagnose diagnose2 = new Diagnose(user);
+        Diagnose diagnose2 = new Diagnose();
         diagnose2.associateUser(user);
         diagnoseRepository.save(diagnose2);
         //진단 2회 결과

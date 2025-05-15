@@ -1,5 +1,6 @@
 package com.BallaDream.BallaDream.service.diagnose;
 
+import com.BallaDream.BallaDream.constants.DiagnoseScore;
 import com.BallaDream.BallaDream.domain.diagnose.Diagnose;
 import com.BallaDream.BallaDream.domain.diagnose.UserSkinLevel;
 import com.BallaDream.BallaDream.domain.enums.DiagnoseType;
@@ -24,7 +25,9 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import static com.BallaDream.BallaDream.constants.DiagnoseScore.*;
 import static com.BallaDream.BallaDream.constants.ResponseCode.*;
+import static com.BallaDream.BallaDream.domain.enums.Level.*;
 
 @Slf4j
 @Service
@@ -38,7 +41,7 @@ public class DiagnoseService {
 
     //피부 진단 결과 저장
     //Todo diagnoseResult 에서 겹치는 DiagnoseType 있는지 점검하기
-    @Transactional
+    /*@Transactional
     public void saveDiagnose(Map<DiagnoseType, Level> diagnoseResult, String username) {
         User user = userRepository.findByUsername(username).orElseThrow(
                 () -> new UserException(INVALID_USER));
@@ -55,9 +58,53 @@ public class DiagnoseService {
 
         diagnoseRepository.save(diagnose);
         levelRepository.saveAll(userSkinLevelList);
+    }*/
+
+    //진단 기록 저장하기
+    @Transactional
+    public Diagnose saveDiagnose(DiagnoseSaveRequestDto dto, String username) {
+        User user = userRepository.findByUsername(username).orElseThrow(
+                () -> new UserException(INVALID_USER));
+
+        Diagnose diagnose = Diagnose
+                .builder()
+                .user(user)
+                .dryLipsLevel(DRY_LIPS_SCORE.getLevelByScore(dto.getDryLipsScore())) //입술 건조도
+                .pigmentForeheadLevel(PIGMENT_FOREHEAD_SCORE.getLevelByScore(dto.getPigmentForeheadScore())) //이마 색소침착
+                .pigmentLeftCheekLevel(PIGMENT_CHEEK_SCORE.getLevelByScore(dto.getPigmentLeftCheekScore())) //왼쪽볼 색소침착
+                .pigmentRightCheekLevel(PIGMENT_CHEEK_SCORE.getLevelByScore(dto.getPigmentRightCheekScore())) //오른쪽볼 색소침착
+                .wrinkleForeheadLevel(WRINKLE_FOREHEAD_SCORE.getLevelByScore(dto.getWrinkleForeheadScore())) //이마 주름
+                .wrinkleGlabellaLevel(WRINKLE_GLABELLA_SCORE.getLevelByScore(dto.getWrinkleGlabellaScore())) //미간 주름
+                .wrinkleLeftEyeLevel(WRINKLE_EYE_SCORE.getLevelByScore(dto.getWrinkleLeftEyeScore())) //왼쪽 눈가 주름
+                .wrinkleRightEyeLevel(WRINKLE_EYE_SCORE.getLevelByScore(dto.getWrinkleRightEyeScore())) //오른쪽 눈가 주름
+                .poreLeftCheekLevel(PORE_CHEEK_SCORE.getLevelByScore(dto.getPoreLeftCheekScore())) //왼쪽 볼 모공
+                .poreRightCheekLevel(PORE_CHEEK_SCORE.getLevelByScore(dto.getPoreRightCheekScore())) //오른쪽 볼 모공
+                .elasticJawlineSaggingLevel(ELASTIC_JAWLINE_SAGGING_SCORE.getLevelByScore(dto.getElasticJawlineSaggingScore())) //턱선처짐
+                .build();
+
+        diagnose.createDate(); //날짜 기입
+        diagnose.associateUser(user); //연관 관계 셋팅
+        Diagnose saveDiagnose = diagnoseRepository.save(diagnose);
+
+
+
+        return saveDiagnose;
     }
 
     //단일 진단 결과 조회
+    public UserDiagnoseResultResponseDto getUserDiagnose(Long userId, Long diagnoseId) {
+
+        Optional<Diagnose> diagnose = diagnoseRepository.findByIdAndUserId(diagnoseId, userId);
+
+        //열람하고자 하는 기록이 사용자의 진단 기록이 아닌 경우
+        if (diagnose.isEmpty()) {
+            throw new DiagnoseOwnershipException();
+        }
+
+        return new UserDiagnoseResultResponseDto(diagnose.get().addUserSkinLevel());
+    }
+
+    /*//단일 진단 결과 조회
     public UserDiagnoseResultResponseDto getUserDiagnose(Long diagnoseId, String username) {
         User user = userRepository.findByUsername(username).orElseThrow(
                 () -> new UserException(INVALID_USER));
@@ -82,7 +129,7 @@ public class DiagnoseService {
         }
 
         return new UserDiagnoseResultResponseDto(result);
-    }
+    }*/
 
     //최근 진단 결과 조회
     public MyPageDiagnoseResponseDto getLatestDiagnose(Long userId) {
@@ -141,6 +188,9 @@ public class DiagnoseService {
         //날짜를 기준으로 가장 오래된 순으로 전송
         return PageRequest.of(0, 6, Sort.by(Sort.Direction.ASC, "date"));
     }
+
+    //피부 진단 점수에 따른 진단 결과
+
 
     /*private List<UserAllDiagnoseDto> mapToUserAllDiagnoseDto(List<UserAllDiagnoseQueryDto> queryDtos) {
         return queryDtos.stream()

@@ -28,7 +28,8 @@ class UserSkinLevelRepositoryTest {
         //given
         User user = new User();
         userRepository.save(user);
-        Diagnose diagnose = new Diagnose(user);
+        Diagnose diagnose = new Diagnose();
+        diagnose.associateUser(user);
         diagnoseRepository.save(diagnose);
         //2개 진단 결과 저장
         UserSkinLevel skinLevel1 = new UserSkinLevel(diagnose, Level.CAUTION, DiagnoseType.DRY);

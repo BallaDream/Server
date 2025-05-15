@@ -31,28 +31,27 @@ class DiagnoseRepositoryTest {
     @Autowired EntityManager em;
 
     @Test
-    @DisplayName("사용자 진단 기록 생성")
+    @DisplayName("사용자 진단 기록 생성 및 조회")
     @Transactional
     void createDiagnoseWithSkinLevel() {
 
         //given
         User user = new User();
         userRepository.save(user);
-        Diagnose diagnose = new Diagnose(user);
-        diagnoseRepository.save(diagnose);
-        UserSkinLevel skinLevel = new UserSkinLevel(diagnose, Level.CAUTION, DiagnoseType.ACNE);
-        levelRepository.save(skinLevel);
+        Diagnose diagnose = new Diagnose();
+        diagnose.associateUser(user);
+        Diagnose savedDiagnose = diagnoseRepository.save(diagnose);
 
         //when
-        Diagnose result = diagnoseRepository.findById(diagnose.getId()).get();
+        Diagnose result = diagnoseRepository.findById(savedDiagnose.getId()).get();
 
         //then
         assertThat(result.getUser()).isEqualTo(user);
-        assertThat(result.getSkinLevelList().get(0)).isEqualTo(skinLevel);
+        assertThat(result).isEqualTo(diagnose);
     }
 
     @Test
-    @DisplayName("사용자의 진단 기록을 조회하기")
+    @DisplayName("사용자의 진단 기록이 있는지 확인하기")
     @Transactional
     void checkUserDiagnose() {
 
@@ -61,7 +60,8 @@ class DiagnoseRepositoryTest {
         userRepository.save(user1);
         User user2 = new User();
         userRepository.save(user2);
-        Diagnose diagnose = new Diagnose(user1);
+        Diagnose diagnose = new Diagnose();
+        diagnose.associateUser(user1);
         diagnoseRepository.save(diagnose);
 
         //when
@@ -74,6 +74,26 @@ class DiagnoseRepositoryTest {
     }
 
     @Test
+    @DisplayName("사용자의 pk 와 진단 기록의 pk로 데이터 조회하기")
+    @Transactional
+    void findByDiagnoseIdAndUserId() {
+
+        //given
+        User user = new User();
+        User savedUser = userRepository.save(user);
+        Diagnose diagnose = new Diagnose();
+        diagnose.associateUser(user);
+        Diagnose savedDiagnose = diagnoseRepository.save(diagnose);
+
+        //when
+        Diagnose result = diagnoseRepository.findByIdAndUserId(savedDiagnose.getId(), savedUser.getId()).get();
+
+        //then
+        assertThat(result).isEqualTo(diagnose);
+        assertThat(result.getUser()).isEqualTo(user);
+    }
+
+    @Test
     @DisplayName("사용자의 모든 진단 기록을 조회하기")
     @Transactional
     void pagingUserDiagnose() {
@@ -82,11 +102,14 @@ class DiagnoseRepositoryTest {
         User user = new User();
         userRepository.save(user);
         //3개의 진단 기록 저장
-        Diagnose diagnose1 = new Diagnose(user);
+        Diagnose diagnose1 = new Diagnose();
+        diagnose1.associateUser(user);
         diagnoseRepository.save(diagnose1);
-        Diagnose diagnose2 = new Diagnose(user);
+        Diagnose diagnose2 = new Diagnose();
+        diagnose2.associateUser(user);
         diagnoseRepository.save(diagnose2);
-        Diagnose diagnose3 = new Diagnose(user);
+        Diagnose diagnose3 = new Diagnose();
+        diagnose3.associateUser(user);
         diagnoseRepository.save(diagnose3);
         //진단 기록에 따른 피부 등급 저장
         UserSkinLevel skinLevel1 = new UserSkinLevel(diagnose1, Level.CAUTION, DiagnoseType.ACNE);
@@ -113,8 +136,5 @@ class DiagnoseRepositoryTest {
                 log.info("data: {}", skinLevel.getDiagnoseType());
             }
         }
-//        assertThat(result.size()).isEqualTo(3);
-//        assertThat(page.getTotalPages()).isEqualTo(1);
-//        assertThat(page.isFirst()).isTrue();
     }
 }
