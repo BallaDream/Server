@@ -19,7 +19,7 @@ public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint {
                          AuthenticationException authException) throws IOException {
 
         // 유효한 자격증명을 제공하지 않고 접근하려 할때 401
-        log.info("JwtAuthenticationEntryPoint");
+//        log.info("JwtAuthenticationEntryPoint");
         response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
     }
 }

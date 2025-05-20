@@ -1,6 +1,7 @@
 package com.BallaDream.BallaDream.controller.user;
 
 import com.BallaDream.BallaDream.dto.message.ResponseDto;
+import com.BallaDream.BallaDream.dto.user.AuthNumberCheckRequestDto;
 import com.BallaDream.BallaDream.dto.user.JoinRequestDto;
 import com.BallaDream.BallaDream.dto.user.JoinMailRequestDto;
 import com.BallaDream.BallaDream.service.user.JoinService;
@@ -29,6 +30,20 @@ public class JoinController {
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(ResponseDto.of(HttpStatus.OK, "회원가입을 성공하였습니다"));
+    }
+
+    @PostMapping("/join/auth-number/check")
+    public ResponseEntity<ResponseDto> checkAuthNumber(@RequestBody @Validated AuthNumberCheckRequestDto checkRequestDto) {
+        log.info("auth-check: {} {}", checkRequestDto.getUsername(), checkRequestDto.getAuthNum());
+        boolean isChecked = mailService.CheckAuthNum(checkRequestDto.getUsername(), checkRequestDto.getAuthNum());
+        if (isChecked) {
+            return ResponseEntity
+                    .status(HttpStatus.OK)
+                    .body(ResponseDto.of(HttpStatus.OK, "인증번호 인증에 성공하였습니다"));
+        }
+        return ResponseEntity
+                .status(HttpStatus.FORBIDDEN)
+                .body(ResponseDto.of(HttpStatus.FORBIDDEN, "유효하지 않은 인증번호 입니다"));
     }
 
     @PostMapping("/vertify-email")

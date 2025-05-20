@@ -62,7 +62,7 @@ public class User {
     public User(String username, String password, LoginType loginType, UserRole role) {
         this.username = username;
         this.password = password;
-        this.nickname = "임시 닉네임";
+        this.nickname = "dream"; //임시 닉네임
         this.loginType = loginType;
         this.role = role;
     }

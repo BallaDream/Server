@@ -37,4 +37,11 @@ public class JoinService {
         User newUser = new User(username, bCryptPasswordEncoder.encode(password), LoginType.WEB, UserRole.ROLE_USER);
         userRepository.save(newUser);
     }
+
+
+    //카카오 회원가입 (controller 에서 유효성 검정을 한다)
+    public void kakaoJoinProcess(String username) {
+        User newUser = new User(username, null, LoginType.KAKAO, UserRole.ROLE_USER);
+        userRepository.save(newUser);
+    }
 }

@@ -7,6 +7,7 @@ import jdk.jshell.Diag;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 
 import java.util.List;
 import java.util.Optional;
@@ -20,4 +21,7 @@ public interface DiagnoseRepository extends JpaRepository<Diagnose, Long> {
     Page<Diagnose> findByUserId(Long userId, Pageable pageable);
 
     Optional<Diagnose> findByIdAndUserId(Long diagnoseId, Long userId);
+
+    @Modifying
+    void deleteByIdAndUserId(Long diagnoseId, Long userId);
 }

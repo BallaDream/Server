@@ -13,6 +13,7 @@ public enum ResponseCode {
     UNAUTHORIZED("인가받지 못한 상태입니다.", 401),
     LOGIN_FAIL("로그인에 실패하였습니다.", 401),
     ID_ALREADY_EXISTS("이미 존재하는 아이디 입니다.", 400),
+    ALREADY_WEB_USER("이미 웹으로 회원가입한 유저입니다.", 400),
     INVALID_AUTH_NUMBER("잘못된 인증번호 입니다.", 400),
     INVALID_LOGIN_PARAMETER("로그인 아이디나 패스워드를 입력하지 않았습니다.", 406),
     INVALID_USER("유효한 회원이 아닙니다.", 401),

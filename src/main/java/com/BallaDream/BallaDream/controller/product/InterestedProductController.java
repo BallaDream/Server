@@ -35,14 +35,23 @@ public class InterestedProductController {
     //관심 있는 화장품을 해제
     @PreAuthorize("hasRole('USER')")
     @DeleteMapping("/interested-product")
-    public ResponseEntity<ResponseDto> deleteInterestedProduct(
-            @RequestParam Long productId,
-            @RequestParam DiagnoseType diagnoseType
-    ) {
+    public ResponseEntity<ResponseDto> deleteInterestedProduct(@RequestParam Long productId,
+                                                               @RequestParam DiagnoseType diagnoseType) {
+
         String username = userService.getUsernameInToken();
         productService.deleteInterestedProduct(productId, diagnoseType, username);
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(ResponseDto.of(HttpStatus.OK, "관심 상품을 등록 해제하였습니다."));
+    }
+
+    //마이페이지에서 관심있는 제품들을 보여준다.
+    //페이지네이션?
+    @PreAuthorize("hasRole('USER')")
+    @GetMapping("/mypage/interested-product")
+    public void getMyInterestedProduct(@RequestParam DiagnoseType diagnoseType,
+                                       @RequestParam(required = false) String formulation) {
+
+
     }
 }

@@ -79,7 +79,7 @@ class DiagnoseServiceTest {
         levelRepository.save(l4);
 
         //when
-        UserAllDiagnoseResponseDto result = diagnoseService.getAllDiagnose(user.getId(), true);
+        UserAllDiagnoseResponseDto result = diagnoseService.getAllDiagnose(user.getId(), true, 0);
 
         //then
         log.info("{}", result); //response dto 양식 확인

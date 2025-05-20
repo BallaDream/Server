@@ -53,16 +53,23 @@ public class DiagnoseController {
     @PreAuthorize("hasRole('USER')")
     @GetMapping("/mypage/diagnose")
     public MyPageDiagnoseResponseDto getLatestDiagnose() {
-        Long userId = userService.getUserId();
-        return diagnoseService.getLatestDiagnose(userId);
+        return diagnoseService.getLatestDiagnose(userService.getUserId());
     }
 
     //사용자의 모든 피부 진단 기록을 반환한다.
     @PreAuthorize("hasRole('USER')")
     @GetMapping("/mypage/diagnoses")
-    public UserAllDiagnoseResponseDto getALLDiagnose(@RequestParam boolean isLatest) {
-        Long userId = userService.getUserId();
-        return diagnoseService.getAllDiagnose(userId, isLatest); //Todo 최신 여부를 입력받고 반환하기
+    public UserAllDiagnoseResponseDto getALLDiagnose(@RequestParam(required = false, defaultValue = "true") boolean isLatest,
+                                                     @RequestParam(required = false, defaultValue = "0") int page) {
+        return diagnoseService.getAllDiagnose(userService.getUserId(), isLatest, page);
     }
 
+    @PreAuthorize("hasRole('USER')")
+    @DeleteMapping("/diagnose/{diagnoseId}")
+    public ResponseEntity<ResponseDto> deleteDiagnose(@PathVariable Long diagnoseId) {
+        diagnoseService.deleteDiagnose(diagnoseId, userService.getUserId());
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(ResponseDto.of(HttpStatus.OK, "해당 피부 진단 내용을 삭제했습니다."));
+    }
 }

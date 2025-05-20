@@ -39,7 +39,7 @@ public class ProductService {
 
         //Todo 몇개씩 데이터를 전달할 것인지 정할것
         List<RecommendProductQueryDto> queryDto = productQueryRepository.recommendProduct(userId, diagnoseType,
-                formulation, minPrice, maxPrice, step * 8, 8);
+                formulation, minPrice, maxPrice, step * 4, 4);
 
         List<RecommendProductDto> result = mapToRecommendProductDto(queryDto);
         return new RecommendationProductResponseDto(result);

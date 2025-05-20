@@ -71,4 +71,6 @@ public class InterestedProductService {
 
         interestedProductRepository.deleteByUserAndDiagnoseTypeAndProduct(user, diagnoseType, product); //데이터 삭제
     }
+
+
 }

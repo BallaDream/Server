@@ -1,5 +1,6 @@
 package com.BallaDream.BallaDream.service.diagnose;
 
+import com.BallaDream.BallaDream.constants.ResponseCode;
 import com.BallaDream.BallaDream.domain.diagnose.Diagnose;
 import com.BallaDream.BallaDream.domain.user.User;
 import com.BallaDream.BallaDream.dto.diagnose.*;
@@ -123,12 +124,12 @@ public class DiagnoseService {
     }
 
     //사용자의 진단 기록을 모두 보내준다. (마이페이지 진단 이력)
-    public UserAllDiagnoseResponseDto getAllDiagnose(Long userId, boolean isLatest) {
+    public UserAllDiagnoseResponseDto getAllDiagnose(Long userId, boolean isLatest, int page) {
 
         //when: 한페이지당 보여줄 데이터는 6개
-        PageRequest pageRequest = getMyAllDiagnosePageRequest(isLatest);
-        Page<Diagnose> page = diagnoseRepository.findByUserId(userId, pageRequest);
-        List<Diagnose> content = page.getContent();
+        PageRequest pageRequest = getMyAllDiagnosePageRequest(isLatest, page);
+        Page<Diagnose> pageResult = diagnoseRepository.findByUserId(userId, pageRequest);
+        List<Diagnose> content = pageResult.getContent();
 
         //dto 만들기
         List<UserAllDiagnoseDto> data = new ArrayList<>();
@@ -138,19 +139,24 @@ public class DiagnoseService {
 
         return UserAllDiagnoseResponseDto.builder()
                 .data(data)
-                .totalCount(page.getTotalElements())
-                .totalPage(page.getTotalPages())
-                .currentPage(page.getNumber())
+                .totalCount(pageResult.getTotalElements())
+                .totalPage(pageResult.getTotalPages())
+                .currentPage(pageResult.getNumber())
                 .build();
     }
 
-    private PageRequest getMyAllDiagnosePageRequest(boolean isLatest) {
+    private PageRequest getMyAllDiagnosePageRequest(boolean isLatest, int page) {
         //한페이지당 보여줄 데이터는 6개로 날짜를 기준으로 최신순으로 전송
         if (isLatest) {
-            return PageRequest.of(0, 6, Sort.by(Sort.Direction.DESC, "date"));
+            return PageRequest.of(page, 6, Sort.by(Sort.Direction.DESC, "date"));
         }
         //날짜를 기준으로 가장 오래된 순으로 전송
-        return PageRequest.of(0, 6, Sort.by(Sort.Direction.ASC, "date"));
+        return PageRequest.of(page, 6, Sort.by(Sort.Direction.ASC, "date"));
+    }
+
+    //피부 진단 결과 삭제하기
+    public void deleteDiagnose(Long diagnoseId, Long userId) {
+        diagnoseRepository.deleteByIdAndUserId(diagnoseId, userId);
     }
 
     //피부 진단 점수에 따른 진단 결과

@@ -18,6 +18,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.*;
 
@@ -91,6 +92,26 @@ class DiagnoseRepositoryTest {
         //then
         assertThat(result).isEqualTo(diagnose);
         assertThat(result.getUser()).isEqualTo(user);
+    }
+
+    @Test
+    @Transactional
+    @DisplayName("사용자의 pk와 진단 pk 기반으로 데이터 삭제")
+    void deleteByUserIdAndDiagnoseId() {
+
+        //given
+        User user = new User();
+        User savedUser = userRepository.save(user);
+        Diagnose diagnose = new Diagnose();
+        diagnose.associateUser(user);
+        Diagnose savedDiagnose = diagnoseRepository.save(diagnose);
+
+        //when
+        diagnoseRepository.deleteByIdAndUserId(savedDiagnose.getId(), savedUser.getId());
+        Optional<Diagnose> result = diagnoseRepository.findById(savedDiagnose.getId());
+
+        //then
+        assertThat(result.isEmpty()).isTrue();
     }
 
     @Test

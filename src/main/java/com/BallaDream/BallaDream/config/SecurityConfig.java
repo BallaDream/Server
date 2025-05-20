@@ -38,7 +38,6 @@ public class SecurityConfig {
 
     @Bean
     public BCryptPasswordEncoder bCryptPasswordEncoder() {
-
         return new BCryptPasswordEncoder();
     }
 
@@ -56,8 +55,8 @@ public class SecurityConfig {
                 .httpBasic((auth) -> auth.disable())
 
                 .authorizeHttpRequests((auth) -> auth
-                        .requestMatchers("/login", "/open", "/join", "/reissue", "/", "/vertify-email",
-                                "/test").permitAll()
+                        .requestMatchers("/login", "/open", "/join/**", "/reissue", "/", "/vertify-email",
+                                "/test", "/kakao/**").permitAll()
                         .anyRequest().authenticated())
 
                 .exceptionHandling(ex -> ex
