@@ -45,15 +45,6 @@ public class CustomLogoutFilter extends GenericFilterBean {
             filterChain.doFilter(request, response);
             return;
         }
-        //get access 토큰
-        String authHeader = request.getHeader("Authorization");
-        String accessToken = null;
-        if (authHeader != null && authHeader.startsWith("Bearer ")) {
-            accessToken = authHeader.substring(7); // "Bearer " 이후의 문자열만 추출
-        } else {
-            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-            return;
-        }
 
         //get refresh token
         String refreshToken = jwtUtil.getRefreshToken(request.getCookies());
@@ -85,7 +76,6 @@ public class CustomLogoutFilter extends GenericFilterBean {
         //로그아웃 진행
         //Refresh 토큰 DB에서 제거
         redisUtil.deleteData(refreshToken);
-        redisUtil.deleteData(jwtUtil.getUsername(accessToken));
 
         //Refresh 토큰 유효시간을 0으로 하여 삭제하기
         Cookie cookie = CookieUtil.deleteRefreshTokenInCookie();
