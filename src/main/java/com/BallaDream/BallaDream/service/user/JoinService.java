@@ -40,8 +40,8 @@ public class JoinService {
 
 
     //카카오 회원가입 (controller 에서 유효성 검정을 한다)
-    public void kakaoJoinProcess(String username) {
-        User newUser = new User(username, null, LoginType.KAKAO, UserRole.ROLE_USER);
-        userRepository.save(newUser);
+    public User kakaoJoinProcess(String username) {
+        User user = new User(username, null, LoginType.KAKAO, UserRole.ROLE_USER);
+        return userRepository.save(user);
     }
 }

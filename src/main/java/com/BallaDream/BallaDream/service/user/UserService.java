@@ -1,7 +1,6 @@
 package com.BallaDream.BallaDream.service.user;
 
 import com.BallaDream.BallaDream.common.RedisUtil;
-import com.BallaDream.BallaDream.constants.ResponseCode;
 import com.BallaDream.BallaDream.domain.enums.LoginType;
 import com.BallaDream.BallaDream.domain.user.User;
 import com.BallaDream.BallaDream.exception.user.UserException;
@@ -9,6 +8,8 @@ import com.BallaDream.BallaDream.repository.user.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+
+import java.util.Optional;
 
 import static com.BallaDream.BallaDream.constants.RedisExpiredTime.*;
 import static com.BallaDream.BallaDream.constants.ResponseCode.*;
@@ -46,15 +47,18 @@ public class UserService {
     }
 
 
-
-    //카카오 회원이 존재하는지 체크
-    public boolean isExistKakaoUser(String username) {
-        return userRepository.existsByUsernameAndLoginType(username, KAKAO);
+    //웹, 카카오 회원으로 기존에 회원가입을 이미 한 경우를 체크
+    public boolean isExistUserWithType(String username, LoginType loginType) {
+        return userRepository.existsByUsernameAndLoginType(username, loginType);
     }
 
     //카카오 로그인을 한 회원이 누구인지 찾아서 반환
     public User findKakaoUserByUsername(String username) {
         return userRepository.findByUsernameAndLoginType(username, KAKAO).orElseThrow(
                 () -> new UserException(INVALID_USER));
+    }
+
+    public Optional<User> findByUsername(String username) {
+        return userRepository.findByUsername(username);
     }
 }

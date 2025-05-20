@@ -2,11 +2,12 @@ package com.BallaDream.BallaDream.controller.user;
 
 import com.BallaDream.BallaDream.common.CookieUtil;
 import com.BallaDream.BallaDream.common.RedisUtil;
-import com.BallaDream.BallaDream.constants.TokenType;
+import com.BallaDream.BallaDream.constants.ResponseCode;
 import com.BallaDream.BallaDream.domain.enums.LoginType;
-import com.BallaDream.BallaDream.domain.enums.UserRole;
 import com.BallaDream.BallaDream.domain.user.User;
 import com.BallaDream.BallaDream.dto.user.KakaoUserInfoResponseDto;
+import com.BallaDream.BallaDream.exception.user.AlreadyWebUserException;
+import com.BallaDream.BallaDream.exception.user.UserException;
 import com.BallaDream.BallaDream.jwt.JWTUtil;
 import com.BallaDream.BallaDream.service.user.JoinService;
 import com.BallaDream.BallaDream.service.user.KakaoService;
@@ -21,12 +22,13 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 import static com.BallaDream.BallaDream.constants.RedisExpiredTime.USER_CACHE_EXPIRE_SECONDS;
+import static com.BallaDream.BallaDream.constants.ResponseCode.*;
 import static com.BallaDream.BallaDream.constants.TokenType.ACCESS_TOKEN;
 import static com.BallaDream.BallaDream.constants.TokenType.REFRESH_TOKEN;
 import static com.BallaDream.BallaDream.domain.enums.LoginType.*;
@@ -63,13 +65,19 @@ public class KakaoController {
         String kakaoLoginToken = kakaoService.getAccessTokenFromKakao(code); //카카오로 부터 로그인 토큰 가져오기
         KakaoUserInfoResponseDto userInfo = kakaoService.getUserInfo(kakaoLoginToken); //kakao에 인증 요청
         String username = userInfo.getKakaoAccount().getEmail();
-        boolean isExistUser = userService.isExistKakaoUser(username);
-        //처음 접속하는 카카오 회원인 경우 회원가입을 시킨다.
-        if (!isExistUser) {
-            joinService.kakaoJoinProcess(username);
+        Optional<User> findUser = userService.findByUsername(username);
+
+        User user;
+        //웹, 카카오 모두 회원가입이 되어 있지 않은 회원이면 카카오 회원가입을 진행한다.
+        if (findUser.isEmpty()) {
+            user = joinService.kakaoJoinProcess(username);
+        } else {
+            user = findUser.get();
+            //웹 유저가 카카오로 로그인할 수 없음
+            if (WEB.equals(user.getLoginType())) {
+                throw new AlreadyWebUserException();
+            }
         }
-        //데이터베이스에서 카카오 사용자 조회
-        User user = userService.findKakaoUserByUsername(username);
         String accessToken = jwtUtil.createJwt(ACCESS_TOKEN, username, ROLE_USER.getUserRoleType(), user.getNickname(),
                 KAKAO, jwtUtil.getAccessTokenExpiredTime());
         String refreshToken = jwtUtil.createJwt(REFRESH_TOKEN, username, ROLE_USER.getUserRoleType(), user.getNickname(),

@@ -2,6 +2,7 @@ package com.BallaDream.BallaDream.jwt;
 
 import com.BallaDream.BallaDream.common.CookieUtil;
 import com.BallaDream.BallaDream.common.RedisUtil;
+import com.BallaDream.BallaDream.service.user.UserService;
 import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -11,6 +12,8 @@ import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.util.StringUtils;
 import org.springframework.web.filter.GenericFilterBean;
 
@@ -20,6 +23,7 @@ import static com.BallaDream.BallaDream.constants.ResponseCode.EXPIRED_TOKEN;
 import static com.BallaDream.BallaDream.constants.TokenType.REFRESH_TOKEN;
 
 
+@Slf4j
 @RequiredArgsConstructor
 public class CustomLogoutFilter extends GenericFilterBean {
 
@@ -39,6 +43,15 @@ public class CustomLogoutFilter extends GenericFilterBean {
         String requestMethod = request.getMethod();
         if (!requestUri.matches("^\\/logout$") || !requestMethod.equals("POST")) {
             filterChain.doFilter(request, response);
+            return;
+        }
+        //get access 토큰
+        String authHeader = request.getHeader("Authorization");
+        String accessToken = null;
+        if (authHeader != null && authHeader.startsWith("Bearer ")) {
+            accessToken = authHeader.substring(7); // "Bearer " 이후의 문자열만 추출
+        } else {
+            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
             return;
         }
 
@@ -72,6 +85,7 @@ public class CustomLogoutFilter extends GenericFilterBean {
         //로그아웃 진행
         //Refresh 토큰 DB에서 제거
         redisUtil.deleteData(refreshToken);
+        redisUtil.deleteData(jwtUtil.getUsername(accessToken));
 
         //Refresh 토큰 유효시간을 0으로 하여 삭제하기
         Cookie cookie = CookieUtil.deleteRefreshTokenInCookie();
