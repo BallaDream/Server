@@ -6,6 +6,7 @@ import com.BallaDream.BallaDream.dto.user.JoinRequestDto;
 import com.BallaDream.BallaDream.dto.user.JoinMailRequestDto;
 import com.BallaDream.BallaDream.service.user.JoinService;
 import com.BallaDream.BallaDream.service.user.MailSendService;
+import com.BallaDream.BallaDream.service.user.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -22,6 +23,16 @@ public class JoinController {
 
     private final JoinService joinService;
     private final MailSendService mailService;
+    private final UserService userService;
+
+    //이메일 인증 번호 전송
+    @PostMapping("/vertify-email")
+    public ResponseEntity<ResponseDto> mailSendForJoin(@RequestBody @Validated JoinMailRequestDto mailDto) {
+        mailService.joinEmail(mailDto.getUsername()); //사용자에게 메일 전송
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(ResponseDto.of(HttpStatus.OK, "인증번호를 전송하였습니다"));
+    }
 
     @PostMapping("/join")
     public ResponseEntity<ResponseDto> joinProcess(@RequestBody @Validated JoinRequestDto joinRequestDto) {
@@ -46,11 +57,4 @@ public class JoinController {
                 .body(ResponseDto.of(HttpStatus.FORBIDDEN, "유효하지 않은 인증번호 입니다"));
     }
 
-    @PostMapping("/vertify-email")
-    public ResponseEntity<ResponseDto> mailSendForJoin(@RequestBody @Validated JoinMailRequestDto mailDto) {
-        mailService.joinEmail(mailDto.getUsername()); //사용자에게 메일 전송
-        return ResponseEntity
-                .status(HttpStatus.OK)
-                .body(ResponseDto.of(HttpStatus.OK, "인증번호를 전송하였습니다"));
-    }
 }

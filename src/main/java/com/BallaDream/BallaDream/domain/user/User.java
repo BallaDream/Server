@@ -11,6 +11,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.net.UnknownServiceException;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -33,11 +34,14 @@ public class User {
     @Enumerated(EnumType.STRING)
     private LoginType loginType;
 
-//    private String role;
-
     @Column(name = "user_role")
     @Enumerated(EnumType.STRING)
     private UserRole role;
+    
+    private boolean enabled; //계정 활성화 or 탈퇴
+    
+    @Column(name = "deleted_at")
+    private LocalDate deletedAt; //계정 탈퇴 시각
 
     @OneToMany(mappedBy = "user")
     private List<InterestedProduct> interestedProducts = new ArrayList<>();
@@ -59,12 +63,22 @@ public class User {
         this.password = "temp"; //context 저장을 위한 임시 비밀번호
     }
 
+    //최초의 회원가입을 했을때 아래 생성자를 사용한다.
     public User(String username, String password, LoginType loginType, UserRole role) {
         this.username = username;
         this.password = password;
         this.nickname = "dream"; //임시 닉네임
         this.loginType = loginType;
         this.role = role;
+        this.enabled = true; //계정 활성화
+    }
+
+    public void changePassword(String password) {
+        this.password = password;
+    }
+
+    public void makeEnable() {
+        this.enabled = true;
     }
 }
 

@@ -29,7 +29,9 @@ import org.springframework.util.StreamUtils;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
 
 import static com.BallaDream.BallaDream.constants.RedisExpiredTime.*;
 import static com.BallaDream.BallaDream.constants.ResponseCode.INVALID_LOGIN_PARAMETER;
@@ -82,6 +84,20 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
 //        String username = authentication.getName();
         CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
         User user = userDetails.getUser();
+
+        //회원이 탈퇴한 상태인 경우에는 bad request
+        if (!user.isEnabled()) {
+            //응답 설정
+            response.setStatus(HttpStatus.BAD_REQUEST.value());
+            Map<String, Object> errorBody = new HashMap<>();
+            errorBody.put("code", 400);
+            errorBody.put("message", "탈퇴한 계정입니다. 로그인할 수 없습니다.");
+
+            response.setStatus(HttpStatus.BAD_REQUEST.value());
+            response.setContentType("application/json;charset=UTF-8");
+            response.getWriter().write(objectMapper.writeValueAsString(errorBody));
+            return ;
+        }
 
         Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
         Iterator<? extends GrantedAuthority> iterator = authorities.iterator();

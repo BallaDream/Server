@@ -1,6 +1,7 @@
 package com.BallaDream.BallaDream.service.user;
 
 import com.BallaDream.BallaDream.common.RedisUtil;
+import com.BallaDream.BallaDream.domain.user.User;
 import com.BallaDream.BallaDream.exception.user.DuplicateIdException;
 import com.BallaDream.BallaDream.repository.user.UserRepository;
 import jakarta.mail.MessagingException;
@@ -12,6 +13,7 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
 import java.util.Random;
 
 @Slf4j
@@ -58,10 +60,13 @@ public class MailSendService {
     //회원가입을 위한 이메일 전송
     public String joinEmail(String username) {
 
-        Boolean isExist = userRepository.existsByUsername(username);
-        //이미 등록된 유저네임이면 예외를 던진다
-        if (isExist) {
-            throw new DuplicateIdException();
+        Optional<User> findUser = userRepository.findByUsername(username);
+        //이미 회원가입된 회원이고
+        if (findUser.isPresent()) {
+            //계정이 활성화 되어 있는 계정이라면 메일 전송을 하지 않는다.
+            if(findUser.get().isEnabled()){
+                throw new DuplicateIdException();
+            }
         }
 
         makeRandomNumber(); //인증번호 만들기

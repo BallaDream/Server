@@ -1,18 +1,22 @@
 package com.BallaDream.BallaDream.service.user;
 
 import com.BallaDream.BallaDream.common.RedisUtil;
+import com.BallaDream.BallaDream.domain.enums.Action;
 import com.BallaDream.BallaDream.domain.enums.LoginType;
 import com.BallaDream.BallaDream.domain.user.User;
 import com.BallaDream.BallaDream.exception.user.UserException;
 import com.BallaDream.BallaDream.repository.user.UserRepository;
+import com.BallaDream.BallaDream.service.log.LogService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
 import static com.BallaDream.BallaDream.constants.RedisExpiredTime.*;
 import static com.BallaDream.BallaDream.constants.ResponseCode.*;
+import static com.BallaDream.BallaDream.domain.enums.Action.*;
 import static com.BallaDream.BallaDream.domain.enums.LoginType.*;
 
 @Service
@@ -20,6 +24,7 @@ import static com.BallaDream.BallaDream.domain.enums.LoginType.*;
 public class UserService {
 
     private final UserRepository userRepository;
+    private final LogService logService;
     private final RedisUtil redisUtil;
 
     //security holder에 임시 저장된 사용자 정보를 반환한다.
@@ -42,8 +47,14 @@ public class UserService {
 
         // 조회한 결과를 Redis에 다시 저장
         redisUtil.setDataExpire(username, String.valueOf(user.getId()), USER_CACHE_EXPIRE_SECONDS); // 1시간
-
         return user.getId();
+    }
+
+    //soft delete: 실제로 삭제X 계정만 비활성화 상태로 전환하기
+    @Transactional
+    public void softDeleteUser() {
+        logService.recordUserLog(getUserId(), "회원이 탈퇴하였습니다.", "UserService", WITHDRAW);
+        userRepository.softDeleteUser(getUserId());
     }
 
 
