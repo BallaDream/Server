@@ -27,15 +27,15 @@ public class ProductQueryRepository {
 
     private final JPAQueryFactory queryFactory;
 
-    private List<Long> getProductIds(DiagnoseType diagnoseType, String formulation, Integer minPrice, Integer maxPrice,
-                                     int offset, int limit) {
+    private List<Long> getProductIds(DiagnoseType diagnoseType, Level level,String formulation, Integer minPrice,
+                                     Integer maxPrice, int offset, int limit) {
         return queryFactory
                 .select(product.id)
                 .from(product)
                 .join(productGuide).on(product.id.eq(productGuide.product.id))
                 .join(guide).on(productGuide.guide.id.eq(guide.id))
                 .where(
-                        guide.level.eq(Level.CAUTION),
+                        guide.level.eq(level),
                         guide.diagnoseType.eq(diagnoseType),
                         formulationEq(formulation),
                         priceBetween(minPrice, maxPrice)
@@ -48,11 +48,11 @@ public class ProductQueryRepository {
     }
 
     //추천 상품에 대한 정보를 반환
-    public List<RecommendProductQueryDto> recommendProduct(Long userId, DiagnoseType diagnoseType,
+    public List<RecommendProductQueryDto> recommendProduct(Long userId, DiagnoseType diagnoseType, Level level,
                                                            String formulation, Integer minPrice, Integer maxPrice,
                                                            int offset, int limit) {
 
-        List<Long> productIds = getProductIds(diagnoseType, formulation, minPrice, maxPrice, offset, limit);
+        List<Long> productIds = getProductIds(diagnoseType, level,formulation, minPrice, maxPrice, offset, limit);
 
         return queryFactory
                 .select(Projections.constructor(RecommendProductQueryDto.class,
@@ -69,6 +69,7 @@ public class ProductQueryRepository {
                 .join(element).on(product.id.eq(element.product.id))
                 .leftJoin(interestedProduct).on(product.id.eq(interestedProduct.product.id))
                 .where(product.id.in(productIds))
+                .orderBy(product.id.asc()) //정렬 조건 추가
                 .fetch();
     }
 
@@ -97,11 +98,4 @@ public class ProductQueryRepository {
 //        return !(minPrice == null || maxPrice == null) ? product.price.between(minPrice, maxPrice) : null;
     }
 
-    private BooleanExpression priceLower(Integer minPrice) {
-        return !(minPrice == null) ? product.price.gt(minPrice) : null;
-    }
-
-    private BooleanExpression priceGreater(Integer maxPrice) {
-        return !(maxPrice == null) ? product.price.loe(maxPrice) : null;
-    }
 }

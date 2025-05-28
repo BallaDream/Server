@@ -111,6 +111,9 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
         String refreshToken = jwtUtil.createJwt(REFRESH_TOKEN, user.getUsername(), role, user.getNickname(),
                 user.getLoginType(), jwtUtil.getAccessTokenExpiredTime());
 
+        log.info("accessToken: {}", accessToken);
+        log.info("refreshToken: {}", refreshToken);
+
         //refresh 토큰 저장
         redisUtil.setDataExpire(refreshToken, user.getUsername(), jwtUtil.getRefreshTokenExpiredTime() / 1000);
         //빠른 조회를 위한 user_id 저장

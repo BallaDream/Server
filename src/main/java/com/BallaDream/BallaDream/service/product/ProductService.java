@@ -2,6 +2,7 @@ package com.BallaDream.BallaDream.service.product;
 
 import com.BallaDream.BallaDream.constants.ResponseCode;
 import com.BallaDream.BallaDream.domain.enums.DiagnoseType;
+import com.BallaDream.BallaDream.domain.enums.Level;
 import com.BallaDream.BallaDream.domain.user.User;
 import com.BallaDream.BallaDream.dto.product.RecommendProductQueryDto;
 import com.BallaDream.BallaDream.dto.product.RecommendProductDto;
@@ -29,7 +30,7 @@ public class ProductService {
     private final ProductRepository productRepository;
 
     //피부 진단 직후, 화장품을 추천
-    public RecommendationProductResponseDto createRecommend(Long userId, DiagnoseType diagnoseType,
+    public RecommendationProductResponseDto createRecommend(Long userId, DiagnoseType diagnoseType, Level level,
                                                             String formulation, Integer minPrice, Integer maxPrice,
                                                             int step) {
 //        String username = userService.getUsernameInToken();
@@ -38,7 +39,7 @@ public class ProductService {
 //                new UserException(ResponseCode.INVALID_USER));
 
         //Todo 몇개씩 데이터를 전달할 것인지 정할것
-        List<RecommendProductQueryDto> queryDto = productQueryRepository.recommendProduct(userId, diagnoseType,
+        List<RecommendProductQueryDto> queryDto = productQueryRepository.recommendProduct(userId, diagnoseType, level,
                 formulation, minPrice, maxPrice, step * 4, 4);
 
         List<RecommendProductDto> result = mapToRecommendProductDto(queryDto);

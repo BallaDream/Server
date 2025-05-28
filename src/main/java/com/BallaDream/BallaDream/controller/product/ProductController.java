@@ -30,6 +30,6 @@ public class ProductController {
                                                              @RequestParam(required = false) Integer maxPrice,
                                                              @RequestParam(required = false) String formulation) {
 
-        return productService.createRecommend(userService.getUserId(), diagnoseType, formulation, minPrice, maxPrice, step);
+        return productService.createRecommend(userService.getUserId(), diagnoseType, level,formulation, minPrice, maxPrice, step);
     }
 }

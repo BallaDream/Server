@@ -13,10 +13,12 @@ public class RecommendProductQueryDto {
     private String imageLink;
     private String elementName;
     private boolean isInterested;
+    private int totalCount;
 
     @QueryProjection
 
-    public RecommendProductQueryDto(Long productId, String productName, String formulation, int price, String salesLink, String imageLink, String elementName, boolean isInterested) {
+    public RecommendProductQueryDto(Long productId, String productName, String formulation, int price, String salesLink,
+                                    String imageLink, String elementName, boolean isInterested) {
         this.productId = productId;
         this.productName = productName;
         this.formulation = formulation;
