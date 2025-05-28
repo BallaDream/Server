@@ -26,7 +26,7 @@ public class JoinController {
     private final UserService userService;
 
     //이메일 인증 번호 전송
-    @PostMapping("/vertify-email")
+    @PostMapping("/verify-email")
     public ResponseEntity<ResponseDto> mailSendForJoin(@RequestBody @Validated JoinMailRequestDto mailDto) {
         mailService.joinEmail(mailDto.getUsername()); //사용자에게 메일 전송
         return ResponseEntity
