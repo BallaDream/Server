@@ -16,6 +16,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -58,7 +59,9 @@ public class ProductService {
                                 dto.getSalesLink(),
                                 dto.getImageLink(),
                                 dto.isInterested()
-                        )
+                        ),
+                        LinkedHashMap::new,  //순서 유지되는 Map 사용
+                        Collectors.toList()
                 ))
                 .entrySet().stream()
                 .map(entry -> {
