@@ -99,8 +99,7 @@ public class KakaoController {
         responseBody.put("message", "카카오 로그인 성공");
 
         HttpHeaders headers = new HttpHeaders();
-//        headers.set(ACCESS_TOKEN.getType(), result.getAccessToken());
-        headers.set("Authorization", result.getAccessToken());
+        headers.set(ACCESS_TOKEN.getType(), result.getAccessToken());
         headers.add("Set-Cookie", CookieUtil.createCookie(REFRESH_TOKEN.getType(), result.getRefreshToken()).toString());
 
         return new ResponseEntity<>(responseBody, headers, HttpStatus.OK);
