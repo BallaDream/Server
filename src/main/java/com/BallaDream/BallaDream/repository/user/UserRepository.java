@@ -2,7 +2,9 @@ package com.BallaDream.BallaDream.repository.user;
 
 import com.BallaDream.BallaDream.domain.enums.LoginType;
 import com.BallaDream.BallaDream.domain.user.User;
+import jakarta.persistence.LockModeType;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Lock;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -19,6 +21,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
     Optional<User> findByUsernameAndLoginType(String username, LoginType loginType);
 
     @Modifying
+//    @Lock(LockModeType.PESSIMISTIC_WRITE)
     @Query(value = "update users set enabled = false, deleted_at = now() where user_id = :id", nativeQuery = true)
     void softDeleteUser(@Param("id") Long id);
 }

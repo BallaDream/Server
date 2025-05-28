@@ -17,6 +17,7 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -69,6 +70,19 @@ class ProductQueryRepositoryTest {
         Product nullResult = productQueryRepository.findByIdAndDiagnoseType(100000000L, DiagnoseType.ACNE); //없는 데이터
         assertThat(findResult.getId()).isEqualTo(product.getId());
         assertThat(nullResult).isNull();
+    }
+
+    @Test
+    @DisplayName("가격으로 조회하기")
+    void findProductByPrice() {
+
+        //given
+
+
+        //when
+
+        //then
+
     }
 
     @Test

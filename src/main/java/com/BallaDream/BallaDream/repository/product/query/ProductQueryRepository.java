@@ -39,6 +39,8 @@ public class ProductQueryRepository {
                         guide.diagnoseType.eq(diagnoseType),
                         formulationEq(formulation),
                         priceBetween(minPrice, maxPrice)
+//                        priceLower(minPrice),
+//                        priceGreater(maxPrice)
                 )
                 .offset(offset)
                 .limit(limit)
@@ -84,7 +86,22 @@ public class ProductQueryRepository {
         return formulationCond != null ? product.formulation.eq(formulationCond) : null;
     }
     private BooleanExpression priceBetween(Integer minPrice, Integer maxPrice) {
-        return !(minPrice == null || maxPrice == null) ? product.price.between(minPrice, maxPrice) : null;
+        if (minPrice == null && maxPrice == null) {
+            return null;
+        } else if (minPrice == null) {
+            return product.price.loe(maxPrice);
+        } else if (maxPrice == null) {
+            return product.price.goe(minPrice);
+        }
+        return product.price.between(minPrice, maxPrice);
+//        return !(minPrice == null || maxPrice == null) ? product.price.between(minPrice, maxPrice) : null;
     }
 
+    private BooleanExpression priceLower(Integer minPrice) {
+        return !(minPrice == null) ? product.price.gt(minPrice) : null;
+    }
+
+    private BooleanExpression priceGreater(Integer maxPrice) {
+        return !(maxPrice == null) ? product.price.loe(maxPrice) : null;
+    }
 }
