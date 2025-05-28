@@ -70,7 +70,7 @@ public class ProductQueryRepository {
                 .join(element).on(product.id.eq(element.product.id))
                 .leftJoin(interestedProduct).on(product.id.eq(interestedProduct.product.id))
                 .where(product.id.in(productIds))
-//                .orderBy(product.id.asc()) //정렬 조건 추가
+                .orderBy(product.id.asc()) //정렬 조건 추가
                 .fetch();
     }
 
