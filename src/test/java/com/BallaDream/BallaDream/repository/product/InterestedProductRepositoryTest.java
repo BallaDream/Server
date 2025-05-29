@@ -37,7 +37,7 @@ class InterestedProductRepositoryTest {
         Product product = new Product(1000000L, "name", 100, "link1",
                 "link12", "formulation");
         productRepository.save(product);
-        InterestedProduct interestedProduct = new InterestedProduct(user, DiagnoseType.ACNE, product);
+        InterestedProduct interestedProduct = new InterestedProduct(user, product);
         interestedProduct.associateProduct(product);
         interestedProduct.associateUser(user);
 
@@ -49,7 +49,6 @@ class InterestedProductRepositoryTest {
         assertThat(result).isEqualTo(interestedProduct);
         assertThat(result.getProduct()).isEqualTo(product);
         assertThat(result.getUser()).isEqualTo(user);
-        assertThat(result.getDiagnoseType()).isEqualTo(DiagnoseType.ACNE);
     }
 
     @Test
@@ -63,14 +62,14 @@ class InterestedProductRepositoryTest {
         Product product = new Product(1000000L, "name", 100, "link1",
                 "link12", "formulation");
         productRepository.save(product);
-        InterestedProduct interestedProduct = new InterestedProduct(user, DiagnoseType.ACNE, product);
+        InterestedProduct interestedProduct = new InterestedProduct(user, product);
         interestedProduct.associateProduct(product);
         interestedProduct.associateUser(user);
         interestedProductRepository.save(interestedProduct);
 
         //when
 //        interestedProductRepository.deleteByUserAndDiagnoseType(user, DiagnoseType.ACNE);
-        interestedProductRepository.deleteByUserAndDiagnoseTypeAndProduct(user, DiagnoseType.ACNE, product);
+        interestedProductRepository.deleteByUserAndProduct(user, product);
 
         //then
         Optional<InterestedProduct> result = interestedProductRepository.findById(interestedProduct.getId());

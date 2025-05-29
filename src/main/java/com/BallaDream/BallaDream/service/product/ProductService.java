@@ -1,13 +1,11 @@
 package com.BallaDream.BallaDream.service.product;
 
-import com.BallaDream.BallaDream.constants.ResponseCode;
 import com.BallaDream.BallaDream.domain.enums.DiagnoseType;
 import com.BallaDream.BallaDream.domain.enums.Level;
-import com.BallaDream.BallaDream.domain.user.User;
-import com.BallaDream.BallaDream.dto.product.RecommendProductQueryDto;
+import com.BallaDream.BallaDream.dto.product.RecommendProductQueryContent;
 import com.BallaDream.BallaDream.dto.product.RecommendProductDto;
+import com.BallaDream.BallaDream.dto.product.RecommendProductQueryDto;
 import com.BallaDream.BallaDream.dto.product.RecommendationProductResponseDto;
-import com.BallaDream.BallaDream.exception.user.UserException;
 import com.BallaDream.BallaDream.repository.product.ProductRepository;
 import com.BallaDream.BallaDream.repository.product.query.ProductQueryRepository;
 import com.BallaDream.BallaDream.repository.user.UserRepository;
@@ -40,14 +38,16 @@ public class ProductService {
 //                new UserException(ResponseCode.INVALID_USER));
 
         //Todo 몇개씩 데이터를 전달할 것인지 정할것
-        List<RecommendProductQueryDto> queryDto = productQueryRepository.recommendProduct(userId, diagnoseType, level,
+//        List<RecommendProductQueryContent> queryDto = productQueryRepository.recommendProduct(userId, diagnoseType, level,
+//                formulation, minPrice, maxPrice, step * 4, 4);
+        RecommendProductQueryDto dto = productQueryRepository.recommendProduct(userId, diagnoseType, level,
                 formulation, minPrice, maxPrice, step * 4, 4);
 
-        List<RecommendProductDto> result = mapToRecommendProductDto(queryDto);
-        return new RecommendationProductResponseDto(result);
+        List<RecommendProductDto> result = mapToRecommendProductDto(dto.getContent());
+        return new RecommendationProductResponseDto(dto.getHasNext(), result);
     }
 
-    private List<RecommendProductDto> mapToRecommendProductDto(List<RecommendProductQueryDto> queryDto) {
+    private List<RecommendProductDto> mapToRecommendProductDto(List<RecommendProductQueryContent> queryDto) {
         return queryDto.stream()
                 //element 을 제외한 나머지 데이터를 기준으로 그룹핑 작업을 수행한다.
                 .collect(Collectors.groupingBy(
@@ -67,7 +67,7 @@ public class ProductService {
                 .map(entry -> {
                     ProductKey key = entry.getKey();
                     List<String> elements = entry.getValue().stream()
-                            .map(RecommendProductQueryDto::getElementName)
+                            .map(RecommendProductQueryContent::getElementName)
                             .distinct() // 중복 제거
                             .sorted()   // 정렬
                             .toList();

@@ -3,7 +3,7 @@ package com.BallaDream.BallaDream.repository.product.query;
 import com.BallaDream.BallaDream.domain.enums.DiagnoseType;
 import com.BallaDream.BallaDream.domain.enums.Level;
 import com.BallaDream.BallaDream.domain.product.Product;
-import com.BallaDream.BallaDream.domain.product.QGuide;
+import com.BallaDream.BallaDream.dto.product.RecommendProductQueryContent;
 import com.BallaDream.BallaDream.dto.product.RecommendProductQueryDto;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
@@ -43,20 +43,21 @@ public class ProductQueryRepository {
 //                        priceGreater(maxPrice)
                 )
                 .offset(offset)
-                .limit(limit)
+                .limit(limit + 1) //페이지 네이션
                 .orderBy(product.id.asc()) //정렬 조건 추가
                 .fetch();
     }
 
     //추천 상품에 대한 정보를 반환
-    public List<RecommendProductQueryDto> recommendProduct(Long userId, DiagnoseType diagnoseType, Level level,
-                                                           String formulation, Integer minPrice, Integer maxPrice,
-                                                           int offset, int limit) {
+    public RecommendProductQueryDto recommendProduct(Long userId, DiagnoseType diagnoseType, Level level,
+                                                     String formulation, Integer minPrice, Integer maxPrice,
+                                                     int offset, int limit) {
 
         List<Long> productIds = getProductIds(diagnoseType, level,formulation, minPrice, maxPrice, offset, limit);
+        boolean hasNextPage = productIds.size() > limit; //다음 페이지가 있는지 확인
 
-        return queryFactory
-                .select(Projections.constructor(RecommendProductQueryDto.class,
+        List<RecommendProductQueryContent> content = queryFactory
+                .select(Projections.constructor(RecommendProductQueryContent.class,
                         product.id,
                         product.productName,
                         product.formulation,
@@ -72,6 +73,8 @@ public class ProductQueryRepository {
                 .where(product.id.in(productIds))
                 .orderBy(product.id.asc()) //정렬 조건 추가
                 .fetch();
+
+        return new RecommendProductQueryDto(hasNextPage, content);
     }
 
     public Product findByIdAndDiagnoseType(Long id, DiagnoseType diagnoseType) {

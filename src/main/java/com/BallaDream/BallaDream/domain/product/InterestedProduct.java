@@ -29,11 +29,17 @@ public class InterestedProduct {
     public InterestedProduct() {
     }
 
-    public InterestedProduct(User user, DiagnoseType diagnoseType, Product product) {
+    public InterestedProduct(User user, Product product) {
         this.user = user;
         this.diagnoseType = diagnoseType;
         this.product = product;
     }
+
+//    public InterestedProduct(User user, DiagnoseType diagnoseType, Product product) {
+//        this.user = user;
+//        this.diagnoseType = diagnoseType;
+//        this.product = product;
+//    }
 
     //연관 관계 매핑 메서드
     public void associateUser(User user) {

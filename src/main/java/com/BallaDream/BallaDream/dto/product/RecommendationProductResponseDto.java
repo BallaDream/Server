@@ -8,5 +8,6 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 public class RecommendationProductResponseDto {
+    private boolean hasNextPage;
     private List<RecommendProductDto> data;
 }

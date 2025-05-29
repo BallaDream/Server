@@ -6,7 +6,7 @@ import com.BallaDream.BallaDream.domain.product.Guide;
 import com.BallaDream.BallaDream.domain.product.Product;
 import com.BallaDream.BallaDream.domain.product.ProductGuide;
 import com.BallaDream.BallaDream.domain.user.User;
-import com.BallaDream.BallaDream.dto.product.RecommendProductQueryDto;
+import com.BallaDream.BallaDream.dto.product.RecommendProductQueryContent;
 import com.BallaDream.BallaDream.repository.product.GuideRepository;
 import com.BallaDream.BallaDream.repository.product.ProductGuideRepository;
 import com.BallaDream.BallaDream.repository.product.ProductRepository;
@@ -98,8 +98,8 @@ class ProductQueryRepositoryTest {
 
     @Test
     void productJoinElement() {
-        List<RecommendProductQueryDto> result = queryFactory
-                .select(Projections.constructor(RecommendProductQueryDto.class,
+        List<RecommendProductQueryContent> result = queryFactory
+                .select(Projections.constructor(RecommendProductQueryContent.class,
                         product.productName,
                         product.formulation,
                         product.price,

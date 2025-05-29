@@ -50,27 +50,25 @@ public class InterestedProductService {
                 findByUserAndProductAndDiagnoseType(user, product, diagnoseType);
         if (interestedProductOpt.isPresent()) {
             InterestedProduct data = interestedProductOpt.get();
-            log.info("bug fix: {} {} {}", data.getUser().getId(), data.getProduct().getId(), data.getDiagnoseType());
             throw new AlreadyInterestedProductException();
         }
 
         //관심 제품 등록
-        InterestedProduct interestedProduct = new InterestedProduct(user, diagnoseType, product);
+        InterestedProduct interestedProduct = new InterestedProduct(user, product);
+//        InterestedProduct interestedProduct = new InterestedProduct(user, diagnoseType, product);
         interestedProduct.associateProduct(product);
         interestedProduct.associateUser(user);
         interestedProductRepository.save(interestedProduct);
     }
 
     @Transactional
-    public void deleteInterestedProduct(Long productId, DiagnoseType diagnoseType, String username) {
+    public void deleteInterestedProduct(Long productId, String username) {
         User user = userRepository.findByUsername(username).orElseThrow(
                 () -> new UserException(INVALID_USER));
 
         Product product = productRepository.findById(productId).orElseThrow(
                 ProductNotFoundException::new);
 
-        interestedProductRepository.deleteByUserAndDiagnoseTypeAndProduct(user, diagnoseType, product); //데이터 삭제
+        interestedProductRepository.deleteByUserAndProduct(user, product); //데이터 삭제
     }
-
-
 }
