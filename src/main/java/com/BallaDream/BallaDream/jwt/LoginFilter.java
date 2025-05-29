@@ -111,18 +111,14 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
         String refreshToken = jwtUtil.createJwt(REFRESH_TOKEN, user.getUsername(), role, user.getNickname(),
                 user.getLoginType(), jwtUtil.getAccessTokenExpiredTime());
 
-        log.info("accessToken: {}", accessToken);
-        log.info("refreshToken: {}", refreshToken);
-
         //refresh 토큰 저장
         redisUtil.setDataExpire(refreshToken, user.getUsername(), jwtUtil.getRefreshTokenExpiredTime() / 1000);
         //빠른 조회를 위한 user_id 저장
         redisUtil.setDataExpire(user.getUsername(), String.valueOf(user.getId()), USER_CACHE_EXPIRE_SECONDS); // 1시간
 
         //응답 설정
-//        response.setHeader("Authorization", accessToken);
         response.setHeader(ACCESS_TOKEN.getType(), accessToken); // 토큰 설정
-        response.setHeader("Access-Control-Expose-Headers", "access");
+        response.setHeader("Access-Control-Expose-Headers", ACCESS_TOKEN.getType());
         response.addCookie(CookieUtil.createCookie(REFRESH_TOKEN.getType(), refreshToken));
         response.setStatus(HttpStatus.OK.value());
     }

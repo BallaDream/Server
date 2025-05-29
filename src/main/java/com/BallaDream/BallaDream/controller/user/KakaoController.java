@@ -67,32 +67,6 @@ public class KakaoController {
         KakaoUserInfoResponseDto userInfo = kakaoService.getUserInfo(kakaoLoginToken); //kakao에 인증 요청
         String username = userInfo.getKakaoAccount().getEmail();
         KakaoLoginResultDto result = kakaoService.kakaoLogin(username);
-        /*Optional<User> findUser = userService.findByUsername(username);
-
-        User user;
-        //웹, 카카오 모두 회원가입이 되어 있지 않은 회원이면 카카오 회원가입을 진행한다.
-        if (findUser.isEmpty()) {
-            user = joinService.kakaoJoinProcess(username);
-        } else {
-            user = findUser.get();
-            //웹 유저가 카카오로 로그인할 수 없음
-            if (WEB.equals(user.getLoginType())) {
-                throw new AlreadyWebUserException();
-            } 
-            //회원 탈퇴한 계정으로 로그인할 수 없음
-            else if (!user.isEnabled()) {
-                throw new UserException(DISABLED_USER);
-            }
-        }
-        String accessToken = jwtUtil.createJwt(ACCESS_TOKEN, username, ROLE_USER.getUserRoleType(), user.getNickname(),
-                KAKAO, jwtUtil.getAccessTokenExpiredTime());
-        String refreshToken = jwtUtil.createJwt(REFRESH_TOKEN, username, ROLE_USER.getUserRoleType(), user.getNickname(),
-                KAKAO, jwtUtil.getAccessTokenExpiredTime());
-
-        //refresh 토큰 저장
-        redisUtil.setDataExpire(refreshToken, user.getUsername(), jwtUtil.getRefreshTokenExpiredTime() / 1000);
-        //빠른 조회를 위한 user_id 저장
-        redisUtil.setDataExpire(user.getUsername(), String.valueOf(user.getId()), USER_CACHE_EXPIRE_SECONDS); // 1시간*/
 
         Map<String, Object> responseBody = new HashMap<>();
         responseBody.put("status", "success");
@@ -100,6 +74,7 @@ public class KakaoController {
 
         HttpHeaders headers = new HttpHeaders();
         headers.set(ACCESS_TOKEN.getType(), result.getAccessToken());
+        headers.set("Access-Control-Expose-Headers", ACCESS_TOKEN.getType());
         headers.add("Set-Cookie", CookieUtil.createCookie(REFRESH_TOKEN.getType(), result.getRefreshToken()).toString());
 
         return new ResponseEntity<>(responseBody, headers, HttpStatus.OK);
