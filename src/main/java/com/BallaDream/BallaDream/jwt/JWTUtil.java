@@ -85,6 +85,7 @@ public class JWTUtil {
 
     //쿠키에서 refresh 토큰을 꺼내는 메서드
     public String getRefreshToken(Cookie[] cookies) {
+
         for (Cookie cookie : cookies) {
             if (cookie.getName().equals(REFRESH_TOKEN.getType())) {
                 return cookie.getValue();
