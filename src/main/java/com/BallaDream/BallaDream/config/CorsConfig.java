@@ -15,5 +15,6 @@ public class CorsConfig implements WebMvcConfigurer {
                 .exposedHeaders("access", "refresh", "Authorization")
                 .allowedOrigins("http://localhost:5173")
                 .allowedOrigins("https://balladream.shop"); //프론트엔드 서버 기입
+
     }
 }

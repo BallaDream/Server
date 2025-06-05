@@ -22,6 +22,7 @@ import org.springframework.security.web.authentication.logout.LogoutFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 
+import java.util.Arrays;
 import java.util.Collections;
 
 @Slf4j
@@ -79,8 +80,9 @@ public class SecurityConfig {
 
                         CorsConfiguration configuration = new CorsConfiguration();
 
-                        configuration.setAllowedOrigins(Collections.singletonList("http://localhost:5173")); //Todo 프론트엔드 서버로 변경
-                        configuration.setAllowedOrigins(Collections.singletonList("https://balladream.shop")); //Todo 프론트엔드 서버로 변경
+                        configuration.setAllowedOrigins(Arrays.asList("http://localhost:5173", "https://balladream.shop"));
+//                        configuration.setAllowedOrigins(Collections.singletonList("http://localhost:5173")); //프론트엔드 서버 기입
+//                        configuration.setAllowedOrigins(Collections.singletonList("https://balladream.shop")); //프론트엔드 서버 기입
                         configuration.setAllowedMethods(Collections.singletonList("*")); //모든 get, post 등의 메서드 허용
                         configuration.setAllowCredentials(true);
                         configuration.setAllowedHeaders(Collections.singletonList("*"));
