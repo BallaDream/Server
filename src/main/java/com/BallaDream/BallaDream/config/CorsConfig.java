@@ -13,6 +13,7 @@ public class CorsConfig implements WebMvcConfigurer {
         registry.addMapping("/**")
 //                .allowedMethods(GET.name(), POST.name(), DELETE.name(), PATCH.name(), PUT.name())
                 .exposedHeaders("access", "refresh", "Authorization")
-                .allowedOrigins("http://localhost:5173"); //Todo 프론트엔드 서버 기입
+                .allowedOrigins("http://localhost:5173")
+                .allowedOrigins("https://balladream.shop"); //프론트엔드 서버 기입
     }
 }

@@ -8,6 +8,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import java.util.ArrayList;
 import java.util.Collection;
 
+//DB에 저장된 사용자 정보를 비교하여 로그인 성공 여부를 결정하는 클래스
 @RequiredArgsConstructor
 public class CustomUserDetails implements UserDetails {
 

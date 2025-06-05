@@ -68,8 +68,10 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
                 return null;
             }
 
+            //spring security 전용 로그인 포맷 생성
             UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(userDto.getUsername(),
                     userDto.getPassword(), null);
+            //authenticationManager에 사용자 아이디, 비밀번호 정보 넘기기 -> authManager가 정보를 userDetail에 전달한다.
             return authenticationManager.authenticate(authToken);
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -82,6 +84,7 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
 
         //유저 정보
 //        String username = authentication.getName();
+        //로그인 성공시 Authentication 객체가 생성된다.
         CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
         User user = userDetails.getUser();
 
