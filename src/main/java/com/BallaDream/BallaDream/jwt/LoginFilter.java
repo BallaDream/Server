@@ -122,6 +122,7 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
         //응답 설정
         response.setHeader(ACCESS_TOKEN.getType(), accessToken); // 토큰 설정
         response.setHeader("Access-Control-Expose-Headers", ACCESS_TOKEN.getType());
+        response.setHeader("Access-Control-Allow-Credentials", "true");
         response.addCookie(CookieUtil.createCookie(REFRESH_TOKEN.getType(), refreshToken));
         response.setStatus(HttpStatus.OK.value());
     }

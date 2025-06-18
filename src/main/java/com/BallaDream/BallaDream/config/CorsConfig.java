@@ -11,10 +11,8 @@ public class CorsConfig implements WebMvcConfigurer {
     @Override
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**")
-//                .allowedMethods(GET.name(), POST.name(), DELETE.name(), PATCH.name(), PUT.name())
+                .allowCredentials(true)
                 .exposedHeaders("access", "refresh", "Authorization")
-                .allowedOrigins("http://localhost:5173")
-                .allowedOrigins("https://balladream.shop"); //프론트엔드 서버 기입
-
+                .allowedOrigins("https://balladream.shop","http://localhost:5173" ); //프론트엔드 서버 기입
     }
 }
