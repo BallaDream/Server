@@ -1,6 +1,9 @@
 package com.BallaDream.BallaDream.common;
 
 import jakarta.servlet.http.Cookie;
+import org.springframework.http.ResponseCookie;
+
+import java.time.Duration;
 
 import static com.BallaDream.BallaDream.constants.TokenType.REFRESH_TOKEN;
 
@@ -13,6 +16,16 @@ public class CookieUtil {
         cookie.setPath("/");
         cookie.setHttpOnly(true);
         return cookie;
+    }
+
+    public static ResponseCookie createRefreshCookie(String key, String value) {
+        return ResponseCookie.from(key, value)
+                .httpOnly(true)
+                .secure(true)
+                .sameSite("None")
+                .path("/")
+                .maxAge(Duration.ofDays(1))
+                .build();
     }
 
     public static Cookie deleteRefreshTokenInCookie() {
