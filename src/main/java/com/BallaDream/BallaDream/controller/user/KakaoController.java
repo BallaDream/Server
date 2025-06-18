@@ -75,8 +75,15 @@ public class KakaoController {
         HttpHeaders headers = new HttpHeaders();
         headers.set(ACCESS_TOKEN.getType(), result.getAccessToken());
         headers.set("Access-Control-Expose-Headers", ACCESS_TOKEN.getType());
-        headers.add("Set-Cookie", CookieUtil.createCookie(REFRESH_TOKEN.getType(), result.getRefreshToken()).toString());
+//        headers.add("Set-Cookie", CookieUtil.createCookie(REFRESH_TOKEN.getType(), result.getRefreshToken()).toString());
+//        headers.add("Set-Cookie", CookieUtil.createRefreshCookie(REFRESH_TOKEN.getType(), result.getRefreshToken()).toString());
+        headers.add(HttpHeaders.SET_COOKIE, CookieUtil.createRefreshCookie(REFRESH_TOKEN.getType(), result.getRefreshToken()).toString());
 
         return new ResponseEntity<>(responseBody, headers, HttpStatus.OK);
     }
+        /*response.setHeader(ACCESS_TOKEN.getType(), accessToken); // 토큰 설정
+        response.setHeader("Access-Control-Expose-Headers", ACCESS_TOKEN.getType());
+        response.setHeader("Access-Control-Allow-Credentials", "true");
+        response.setHeader("Set-Cookie" ,CookieUtil.createRefreshCookie(REFRESH_TOKEN.getType(), refreshToken).toString());
+        response.setStatus(HttpStatus.OK.value());*/
 }
