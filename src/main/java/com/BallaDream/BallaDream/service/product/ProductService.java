@@ -32,9 +32,9 @@ public class ProductService {
     public RecommendationProductResponseDto createRecommend(Long userId, DiagnoseType diagnoseType, Level level,
                                                             String formulation, Integer minPrice, Integer maxPrice,
                                                             int step) {
-        //todo 페이지 네이션  0 ~ 4 / 4 ~ 8 -> 4가 겹침
+        //todo 페이지 네이션  0 ~ 5 / 5 ~ 10 -> 5가 겹침
         RecommendProductQueryDto dto = productQueryRepository.recommendProduct(userId, diagnoseType, level,
-                formulation, minPrice, maxPrice, step * 4, 4);
+                formulation, minPrice, maxPrice, step * 5, 5);
 
         List<RecommendProductDto> result = mapToRecommendProductDto(dto.getContent());
         return new RecommendationProductResponseDto(dto.getHasNext(), result);
