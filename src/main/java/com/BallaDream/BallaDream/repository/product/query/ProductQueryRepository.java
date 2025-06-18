@@ -39,8 +39,6 @@ public class ProductQueryRepository {
                         guide.diagnoseType.eq(diagnoseType),
                         formulationEq(formulation),
                         priceBetween(minPrice, maxPrice)
-//                        priceLower(minPrice),
-//                        priceGreater(maxPrice)
                 )
                 .offset(offset)
                 .limit(limit + 1) //페이지 네이션
@@ -53,8 +51,12 @@ public class ProductQueryRepository {
                                                      String formulation, Integer minPrice, Integer maxPrice,
                                                      int offset, int limit) {
 
-        List<Long> productIds = getProductIds(diagnoseType, level,formulation, minPrice, maxPrice, offset, limit);
+        List<Long> productIds = getProductIds(diagnoseType, level, formulation, minPrice, maxPrice, offset, limit);
         boolean hasNextPage = productIds.size() > limit; //다음 페이지가 있는지 확인
+
+        if (hasNextPage) {
+            productIds = productIds.subList(0, limit); //중복 방지용으로 초과분 제거
+        }
 
         List<RecommendProductQueryContent> content = queryFactory
                 .select(Projections.constructor(RecommendProductQueryContent.class,
@@ -87,9 +89,11 @@ public class ProductQueryRepository {
                 .fetchOne();
     }
 
+    //제형에 대한 검색
     private BooleanExpression formulationEq(String formulationCond) {
         return formulationCond != null ? product.formulation.eq(formulationCond) : null;
     }
+    //가격에 대한 검색
     private BooleanExpression priceBetween(Integer minPrice, Integer maxPrice) {
         if (minPrice == null && maxPrice == null) {
             return null;
@@ -99,7 +103,6 @@ public class ProductQueryRepository {
             return product.price.goe(minPrice);
         }
         return product.price.between(minPrice, maxPrice);
-//        return !(minPrice == null || maxPrice == null) ? product.price.between(minPrice, maxPrice) : null;
     }
 
 }

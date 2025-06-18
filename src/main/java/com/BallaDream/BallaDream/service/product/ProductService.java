@@ -32,14 +32,7 @@ public class ProductService {
     public RecommendationProductResponseDto createRecommend(Long userId, DiagnoseType diagnoseType, Level level,
                                                             String formulation, Integer minPrice, Integer maxPrice,
                                                             int step) {
-//        String username = userService.getUsernameInToken();
-//        Long userId = userService.getUserId();
-//        User user = userRepository.findByUsername(username).orElseThrow(() ->
-//                new UserException(ResponseCode.INVALID_USER));
-
-        //Todo 몇개씩 데이터를 전달할 것인지 정할것
-//        List<RecommendProductQueryContent> queryDto = productQueryRepository.recommendProduct(userId, diagnoseType, level,
-//                formulation, minPrice, maxPrice, step * 4, 4);
+        //todo 페이지 네이션  0 ~ 4 / 4 ~ 8 -> 4가 겹침
         RecommendProductQueryDto dto = productQueryRepository.recommendProduct(userId, diagnoseType, level,
                 formulation, minPrice, maxPrice, step * 4, 4);
 
