@@ -9,14 +9,14 @@ import static com.BallaDream.BallaDream.constants.TokenType.REFRESH_TOKEN;
 
 public class CookieUtil {
 
-    public static Cookie createCookie(String key, String value) {
+    /*public static Cookie createCookie(String key, String value) {
         Cookie cookie = new Cookie(key, value);
         cookie.setMaxAge(24 * 60 * 60);
         cookie.setSecure(true);
         cookie.setPath("/");
         cookie.setHttpOnly(true);
         return cookie;
-    }
+    }*/
 
     public static ResponseCookie createRefreshCookie(String key, String value) {
         return ResponseCookie.from(key, value)

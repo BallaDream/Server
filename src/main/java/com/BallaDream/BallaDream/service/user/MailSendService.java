@@ -78,7 +78,7 @@ public class MailSendService {
                         "<br><br>" +
                         "인증 번호는 " + authNumber + " 입니다.";
         mailSend(setFrom, toMail, title, content);
-        setAuthNumberInRedis(toMail, authNumber);
+        setAuthNumberInRedis(toMail, authNumber); //5분동안 인증번호 정보 저장
         return Integer.toString(authNumber);
     }
 

@@ -18,6 +18,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -75,15 +76,9 @@ public class KakaoController {
         HttpHeaders headers = new HttpHeaders();
         headers.set(ACCESS_TOKEN.getType(), result.getAccessToken());
         headers.set("Access-Control-Expose-Headers", ACCESS_TOKEN.getType());
-//        headers.add("Set-Cookie", CookieUtil.createCookie(REFRESH_TOKEN.getType(), result.getRefreshToken()).toString());
-//        headers.add("Set-Cookie", CookieUtil.createRefreshCookie(REFRESH_TOKEN.getType(), result.getRefreshToken()).toString());
-        headers.add(HttpHeaders.SET_COOKIE, CookieUtil.createRefreshCookie(REFRESH_TOKEN.getType(), result.getRefreshToken()).toString());
+        ResponseCookie refreshCookie = CookieUtil.createRefreshCookie(REFRESH_TOKEN.getType(), result.getRefreshToken());
+        headers.add(HttpHeaders.SET_COOKIE, refreshCookie.toString());
 
         return new ResponseEntity<>(responseBody, headers, HttpStatus.OK);
     }
-        /*response.setHeader(ACCESS_TOKEN.getType(), accessToken); // 토큰 설정
-        response.setHeader("Access-Control-Expose-Headers", ACCESS_TOKEN.getType());
-        response.setHeader("Access-Control-Allow-Credentials", "true");
-        response.setHeader("Set-Cookie" ,CookieUtil.createRefreshCookie(REFRESH_TOKEN.getType(), refreshToken).toString());
-        response.setStatus(HttpStatus.OK.value());*/
 }

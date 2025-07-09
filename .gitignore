@@ -9,6 +9,7 @@ build/
 application.yml
 aws.yml
 compose.yml
+keystore.p12
 
 ### STS ###
 .apt_generated
