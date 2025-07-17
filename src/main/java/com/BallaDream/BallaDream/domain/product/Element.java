@@ -1,8 +1,10 @@
 package com.BallaDream.BallaDream.domain.product;
 
 import jakarta.persistence.*;
+import lombok.Getter;
 
 @Entity
+@Getter
 public class Element {
     @Id
     @Column(name = "element_id")

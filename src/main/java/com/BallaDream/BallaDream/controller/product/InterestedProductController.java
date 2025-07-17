@@ -2,6 +2,7 @@ package com.BallaDream.BallaDream.controller.product;
 
 import com.BallaDream.BallaDream.domain.enums.DiagnoseType;
 import com.BallaDream.BallaDream.dto.message.ResponseDto;
+import com.BallaDream.BallaDream.dto.mypage.MyPageInterestedProductResponseDto;
 import com.BallaDream.BallaDream.dto.product.InterestedProductRequestDto;
 import com.BallaDream.BallaDream.service.product.InterestedProductService;
 import com.BallaDream.BallaDream.service.user.UserService;
@@ -25,7 +26,7 @@ public class InterestedProductController {
     public ResponseEntity<ResponseDto> addInterestedProduct(@RequestBody @Validated InterestedProductRequestDto interestedProductDto) {
 
         Long userId = userService.getUserId();
-        productService.addInterestedProduct(interestedProductDto.getProductId(), interestedProductDto.getDiagnoseType(), userId);
+        productService.addInterestedProduct(interestedProductDto.getProductId(), userId);
 
         return ResponseEntity
                 .status(HttpStatus.OK)
@@ -45,12 +46,11 @@ public class InterestedProductController {
     }
 
     //마이페이지에서 관심있는 제품들을 보여준다.
-    //페이지네이션?
     @PreAuthorize("hasRole('USER')")
     @GetMapping("/mypage/interested-product")
-    public void getMyInterestedProduct(@RequestParam(required = false, defaultValue = "0") int page) {
+    public MyPageInterestedProductResponseDto getMyInterestedProduct(@RequestParam(required = false, defaultValue = "0") int page) {
 
         Long userId = userService.getUserId();
-
+        return productService.getUserInterestedProducts(page ,userId);
     }
 }

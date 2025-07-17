@@ -1,9 +1,11 @@
 package com.BallaDream.BallaDream.domain.product;
 
 import jakarta.persistence.*;
+import lombok.Getter;
 
 @Table(name = "product_guide")
 @Entity
+@Getter
 public class ProductGuide {
 
     @Id

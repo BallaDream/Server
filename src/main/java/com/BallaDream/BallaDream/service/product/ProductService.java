@@ -2,6 +2,9 @@ package com.BallaDream.BallaDream.service.product;
 
 import com.BallaDream.BallaDream.domain.enums.DiagnoseType;
 import com.BallaDream.BallaDream.domain.enums.Level;
+import com.BallaDream.BallaDream.domain.product.Guide;
+import com.BallaDream.BallaDream.domain.product.Product;
+import com.BallaDream.BallaDream.domain.product.ProductGuide;
 import com.BallaDream.BallaDream.dto.product.RecommendProductQueryContent;
 import com.BallaDream.BallaDream.dto.product.RecommendProductDto;
 import com.BallaDream.BallaDream.dto.product.RecommendProductQueryDto;
@@ -39,6 +42,16 @@ public class ProductService {
         return new RecommendationProductResponseDto(dto.getHasNext(), result);
     }
 
+    //상품의 진단 종류에 대해서 가져오기
+    public List<DiagnoseType> getProductDiagnoseType(Product product) {
+        return product.getProductGuides().stream()
+                .map(ProductGuide::getGuide)
+                .map(Guide::getDiagnoseType)
+                .collect(Collectors.toList());
+    }
+
+
+    //데이터 전처리
     private List<RecommendProductDto> mapToRecommendProductDto(List<RecommendProductQueryContent> queryDto) {
         return queryDto.stream()
                 //element 을 제외한 나머지 데이터를 기준으로 그룹핑 작업을 수행한다.

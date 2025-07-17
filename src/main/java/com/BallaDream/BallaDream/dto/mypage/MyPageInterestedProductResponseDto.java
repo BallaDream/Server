@@ -10,6 +10,5 @@ import java.util.List;
 public class MyPageInterestedProductResponseDto {
     private int totalPage;
     private int currentPage;
-    private Long totalCount;
     List<MyPageInterestedProductDto> data;
 }

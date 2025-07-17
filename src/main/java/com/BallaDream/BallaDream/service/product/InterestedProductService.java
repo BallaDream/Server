@@ -5,6 +5,7 @@ import com.BallaDream.BallaDream.domain.product.InterestedProduct;
 import com.BallaDream.BallaDream.domain.product.Product;
 import com.BallaDream.BallaDream.domain.user.User;
 import com.BallaDream.BallaDream.dto.mypage.MyPageInterestedProductDto;
+import com.BallaDream.BallaDream.dto.mypage.MyPageInterestedProductResponseDto;
 import com.BallaDream.BallaDream.exception.user.AlreadyInterestedProductException;
 import com.BallaDream.BallaDream.exception.product.ProductNotFoundException;
 import com.BallaDream.BallaDream.exception.user.UserException;
@@ -20,6 +21,8 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import static com.BallaDream.BallaDream.constants.ResponseCode.*;
@@ -31,12 +34,13 @@ public class InterestedProductService {
 
     private final InterestedProductRepository interestedProductRepository;
     private final ProductRepository productRepository;
+    private final ProductService productService;
     private final ProductQueryRepository productQueryRepository;
     private final UserRepository userRepository;
 
     //관심 제품 등록
     @Transactional
-    public void addInterestedProduct(Long productId, DiagnoseType diagnoseType, Long userId) {
+    public void addInterestedProduct(Long productId, Long userId) {
         User user = userRepository.findById(userId).orElseThrow(
                 () -> new UserException(INVALID_USER));
 
@@ -71,30 +75,30 @@ public class InterestedProductService {
 
     //사용자 모든 관심 제품 가져오기
     @Transactional(readOnly = true)
-    public MyPageInterestedProductDto getUserInterestedProducts(int page, Long userId) {
+    public MyPageInterestedProductResponseDto getUserInterestedProducts(int page, Long userId) {
         User user = userRepository.findById(userId).orElseThrow(
                 () -> new UserException(INVALID_USER));
         PageRequest pageRequest = PageRequest.of(page, 9, Sort.by(Sort.Direction.DESC, "date"));
-        Page<InterestedProduct> interestedProducts = interestedProductRepository.findByUserId(userId, pageRequest);
-        return null;
+        Page<InterestedProduct> result = interestedProductRepository.findByUserId(userId, pageRequest);
+        List<InterestedProduct> content = result.getContent();
 
-        /* when: 한페이지당 보여줄 데이터는 6개
-        PageRequest pageRequest = getMyAllDiagnosePageRequest(isLatest, page);
-        Page<Diagnose> pageResult = diagnoseRepository.findByUserId(userId, pageRequest);
-        List<Diagnose> content = pageResult.getContent();
-
-        //dto 만들기
-        List<UserAllDiagnoseDto> data = new ArrayList<>();
-        for (Diagnose diagnose : content) {
-            data.add(new UserAllDiagnoseDto(diagnose.getId(), diagnose.getDate(), diagnose.getTotalUserSkinLevel()));
+        //사용자 관심 상품 & 성분 & 진단 종류를 가져오기
+        List<MyPageInterestedProductDto> data = new ArrayList<>();
+        for (InterestedProduct interestedProduct : content) {
+            Product product = interestedProduct.getProduct();
+            MyPageInterestedProductDto interestedProductDto = MyPageInterestedProductDto.builder()
+                    .productName(product.getProductName())
+                    .price(product.getPrice())
+                    .productId(product.getId())
+                    .element(product.getProductElements())
+                    .imageLink(product.getImageLink())
+                    .salesLink(product.getSalesLink())
+                    .diagnoseType(product.getProductDiagnoseType())
+                    .build();
+            data.add(interestedProductDto);
         }
-
-        return UserAllDiagnoseResponseDto.builder()
-                .data(data)
-                .totalCount(pageResult.getTotalElements())
-                .totalPage(pageResult.getTotalPages())
-                .currentPage(pageResult.getNumber())
-                .build();*/
-
+        //페이지네이션 추가하여 리턴
+        return new MyPageInterestedProductResponseDto(
+                result.getTotalPages(), result.getNumber(), data);
     }
 }
