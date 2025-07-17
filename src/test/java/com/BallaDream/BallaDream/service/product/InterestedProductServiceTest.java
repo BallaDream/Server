@@ -38,8 +38,8 @@ class InterestedProductServiceTest {
         userRepository.save(user1);
         userRepository.save(user2);
         //when
-        productService.addInterestedProduct(2L, DiagnoseType.DRY, "test1");
-        productService.addInterestedProduct(2L, DiagnoseType.DRY, "test2");
+        productService.addInterestedProduct(2L, DiagnoseType.DRY, user1.getId());
+        productService.addInterestedProduct(2L, DiagnoseType.DRY, user2.getId());
 
         //then
         List<InterestedProduct> result = interestedProductRepository.findAll();
@@ -59,7 +59,7 @@ class InterestedProductServiceTest {
 
         //then
         assertThatThrownBy(
-                () -> productService.addInterestedProduct(1L, DiagnoseType.DRY, "test1"))
+                () -> productService.addInterestedProduct(1L, DiagnoseType.DRY, user1.getId()))
                 .isInstanceOf(InvalidInputException.class);
     }
 }

@@ -32,9 +32,9 @@ public class SystemLog {
     }
 
     //사용자 관련 로그가 발생하는 경우
-    public SystemLog(Long userId, LocalDate createdAt, String description, String module, Action action) {
+    public SystemLog(Long userId, String description, String module, Action action) {
         this.userId = userId;
-        this.createdAt = createdAt;
+        this.createdAt = LocalDate.now();
         this.description = description;
         this.module = module;
         this.action = action;

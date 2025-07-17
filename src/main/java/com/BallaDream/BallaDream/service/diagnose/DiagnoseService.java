@@ -1,14 +1,13 @@
 package com.BallaDream.BallaDream.service.diagnose;
 
-import com.BallaDream.BallaDream.constants.ResponseCode;
 import com.BallaDream.BallaDream.domain.diagnose.Diagnose;
 import com.BallaDream.BallaDream.domain.user.User;
 import com.BallaDream.BallaDream.dto.diagnose.*;
+import com.BallaDream.BallaDream.dto.mypage.MyPageDiagnoseResponseDto;
 import com.BallaDream.BallaDream.exception.diagnose.DiagnoseNotFoundException;
 import com.BallaDream.BallaDream.exception.diagnose.DiagnoseOwnershipException;
 import com.BallaDream.BallaDream.exception.user.UserException;
 import com.BallaDream.BallaDream.repository.diagnose.DiagnoseRepository;
-import com.BallaDream.BallaDream.repository.diagnose.UserSkinLevelRepository;
 import com.BallaDream.BallaDream.repository.diagnose.query.DiagnoseQueryRepository;
 import com.BallaDream.BallaDream.repository.user.UserRepository;
 import lombok.RequiredArgsConstructor;

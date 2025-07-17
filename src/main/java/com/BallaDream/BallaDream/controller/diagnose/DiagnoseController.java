@@ -1,9 +1,9 @@
 package com.BallaDream.BallaDream.controller.diagnose;
 
 import com.BallaDream.BallaDream.domain.diagnose.Diagnose;
-import com.BallaDream.BallaDream.domain.enums.DiagnoseType;
 import com.BallaDream.BallaDream.dto.diagnose.*;
 import com.BallaDream.BallaDream.dto.message.ResponseDto;
+import com.BallaDream.BallaDream.dto.mypage.MyPageDiagnoseResponseDto;
 import com.BallaDream.BallaDream.service.diagnose.DiagnoseService;
 import com.BallaDream.BallaDream.service.user.UserService;
 import lombok.RequiredArgsConstructor;
@@ -49,14 +49,14 @@ public class DiagnoseController {
         return diagnoseService.getUserDiagnose(userService.getUserId(), id);
     }
 
-    //사용자의 가장 최근의 피부 진단 기록을 반환한다.
+    //마이 페이지에서 사용자의 가장 최근의 피부 진단 기록을 반환한다.
     @PreAuthorize("hasRole('USER')")
     @GetMapping("/mypage/diagnose")
     public MyPageDiagnoseResponseDto getLatestDiagnose() {
         return diagnoseService.getLatestDiagnose(userService.getUserId());
     }
 
-    //사용자의 모든 피부 진단 기록을 반환한다.
+    //마이 페이지에서 사용자의 모든 피부 진단 기록을 반환한다.
     @PreAuthorize("hasRole('USER')")
     @GetMapping("/mypage/diagnoses")
     public UserAllDiagnoseResponseDto getALLDiagnose(@RequestParam(required = false, defaultValue = "true") boolean isLatest,

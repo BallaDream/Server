@@ -1,4 +1,4 @@
-package com.BallaDream.BallaDream.dto.diagnose;
+package com.BallaDream.BallaDream.dto.mypage;
 
 import com.BallaDream.BallaDream.domain.enums.DiagnoseType;
 import com.BallaDream.BallaDream.domain.enums.Level;

@@ -16,7 +16,7 @@ public class LogService {
 
     //사용자에 관련된 로그 기록 ex) 회원 탈퇴, 회원 탈퇴 후 재 회원가입
     public void recordUserLog(Long userId, String description, String module, Action action) {
-        SystemLog log = new SystemLog(userId, LocalDate.now(), description, module, action);
+        SystemLog log = new SystemLog(userId, description, module, action);
         logRepository.save(log);
     }
 }

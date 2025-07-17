@@ -104,5 +104,4 @@ public class ProductQueryRepository {
         }
         return product.price.between(minPrice, maxPrice);
     }
-
 }

@@ -5,6 +5,8 @@ import com.BallaDream.BallaDream.domain.user.User;
 import jakarta.persistence.*;
 import lombok.Getter;
 
+import java.time.LocalDate;
+
 @Getter
 @Table(name = "interested_product")
 @Entity
@@ -18,28 +20,20 @@ public class InterestedProduct {
     @JoinColumn(name = "user_id")
     private User user;
 
-    @Column(name = "diagnose_type")
-    @Enumerated(EnumType.STRING)
-    private DiagnoseType diagnoseType;
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "product_id")
     private Product product;
+
+    private LocalDate date; //관심 상품 등록 시기
 
     public InterestedProduct() {
     }
 
     public InterestedProduct(User user, Product product) {
         this.user = user;
-        this.diagnoseType = diagnoseType;
         this.product = product;
+        this.date = LocalDate.now();
     }
-
-//    public InterestedProduct(User user, DiagnoseType diagnoseType, Product product) {
-//        this.user = user;
-//        this.diagnoseType = diagnoseType;
-//        this.product = product;
-//    }
 
     //연관 관계 매핑 메서드
     public void associateUser(User user) {

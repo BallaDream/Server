@@ -24,8 +24,8 @@ public class InterestedProductController {
     @PostMapping("/interested-product")
     public ResponseEntity<ResponseDto> addInterestedProduct(@RequestBody @Validated InterestedProductRequestDto interestedProductDto) {
 
-        String username = userService.getUsernameInToken();
-        productService.addInterestedProduct(interestedProductDto.getProductId(), interestedProductDto.getDiagnoseType(), username);
+        Long userId = userService.getUserId();
+        productService.addInterestedProduct(interestedProductDto.getProductId(), interestedProductDto.getDiagnoseType(), userId);
 
         return ResponseEntity
                 .status(HttpStatus.OK)
@@ -37,8 +37,8 @@ public class InterestedProductController {
     @DeleteMapping("/interested-product")
     public ResponseEntity<ResponseDto> deleteInterestedProduct(@RequestParam Long productId) {
 
-        String username = userService.getUsernameInToken();
-        productService.deleteInterestedProduct(productId, username);
+        Long userId = userService.getUserId();
+        productService.deleteInterestedProduct(productId, userId);
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(ResponseDto.of(HttpStatus.OK, "관심 상품을 등록 해제하였습니다."));
@@ -48,9 +48,9 @@ public class InterestedProductController {
     //페이지네이션?
     @PreAuthorize("hasRole('USER')")
     @GetMapping("/mypage/interested-product")
-    public void getMyInterestedProduct(@RequestParam DiagnoseType diagnoseType,
-                                       @RequestParam(required = false) String formulation) {
+    public void getMyInterestedProduct(@RequestParam(required = false, defaultValue = "0") int page) {
 
+        Long userId = userService.getUserId();
 
     }
 }

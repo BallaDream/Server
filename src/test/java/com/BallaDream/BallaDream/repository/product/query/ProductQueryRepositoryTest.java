@@ -114,8 +114,7 @@ class ProductQueryRepositoryTest {
                 .join(guide).on(productGuide.guide.id.eq(guide.id))
                 .leftJoin(interestedProduct)
                 .on(product.id.eq(interestedProduct.product.id)
-                        .and(interestedProduct.user.id.eq(3L)) //Todo 실제 사용자 pk
-                        .and(interestedProduct.diagnoseType.eq(DiagnoseType.DRY))) //Todo 추천 제품의 종류
+                        .and(interestedProduct.user.id.eq(3L))) //Todo 실제 사용자 pk
                 .where(
                         guide.level.eq(Level.CAUTION),
                         guide.diagnoseType.eq(DiagnoseType.DRY),
