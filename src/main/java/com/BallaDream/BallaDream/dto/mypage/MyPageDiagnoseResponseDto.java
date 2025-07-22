@@ -13,6 +13,7 @@ import java.util.Map;
 @Data
 @AllArgsConstructor
 public class MyPageDiagnoseResponseDto {
+    private Long diagnoseId;
     private LocalDate diagnoseDate;
     private Map<DiagnoseType, Level> data = new HashMap<>();
 }

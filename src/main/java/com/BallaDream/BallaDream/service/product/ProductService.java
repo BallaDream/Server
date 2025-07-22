@@ -42,15 +42,6 @@ public class ProductService {
         return new RecommendationProductResponseDto(dto.getHasNext(), result);
     }
 
-    //상품의 진단 종류에 대해서 가져오기
-    public List<DiagnoseType> getProductDiagnoseType(Product product) {
-        return product.getProductGuides().stream()
-                .map(ProductGuide::getGuide)
-                .map(Guide::getDiagnoseType)
-                .collect(Collectors.toList());
-    }
-
-
     //데이터 전처리
     private List<RecommendProductDto> mapToRecommendProductDto(List<RecommendProductQueryContent> queryDto) {
         return queryDto.stream()

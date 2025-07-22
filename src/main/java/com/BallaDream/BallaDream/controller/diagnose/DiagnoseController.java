@@ -23,17 +23,6 @@ public class DiagnoseController {
     private final DiagnoseService diagnoseService;
 
     //사용자의 피부 진단 기록을 저장함
-/*    @PreAuthorize("hasRole('USER')")
-    @PostMapping("/diagnose")
-    public ResponseEntity<ResponseDto> saveDiagnoseResult(@RequestBody DiagnoseResultRequestDto resultDto) {
-        String username = userService.getUsernameInToken();
-        diagnoseService.saveDiagnose(resultDto.getData(), username);
-        return ResponseEntity
-                .status(HttpStatus.OK)
-                .body(ResponseDto.of(HttpStatus.OK, "사용자 피부 진단 정보를 성공적으로 저장하였습니다."));
-    }  */
-
-    //사용자의 피부 진단 기록을 저장함
     @PreAuthorize("hasRole('USER')")
     @PostMapping("/diagnose")
     public DiagnoseSaveResponseDto saveDiagnoseResult(@RequestBody @Validated DiagnoseSaveRequestDto resultDto) {

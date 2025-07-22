@@ -119,7 +119,7 @@ public class DiagnoseService {
                         UserSkinLevel::getDiagnoseType,
                         UserSkinLevel::getLevel));*/
 
-        return new MyPageDiagnoseResponseDto(diagnose.getDate(), diagnose.getTotalUserSkinLevel());
+        return new MyPageDiagnoseResponseDto(diagnose.getId(), diagnose.getDate(), diagnose.getTotalUserSkinLevel());
     }
 
     //사용자의 진단 기록을 모두 보내준다. (마이페이지 진단 이력)
