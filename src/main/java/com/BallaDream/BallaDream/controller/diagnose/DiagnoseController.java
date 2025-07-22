@@ -25,9 +25,9 @@ public class DiagnoseController {
     //사용자의 피부 진단 기록을 저장함
     @PreAuthorize("hasRole('USER')")
     @PostMapping("/diagnose")
-    public DiagnoseSaveResponseDto saveDiagnoseResult(@RequestBody @Validated DiagnoseSaveRequestDto resultDto) {
+    public DiagnoseSaveResponseDto saveDiagnoseResult(@RequestBody @Validated DiagnoseSaveRequestDto requestDto) {
         String username = userService.getUsernameInToken();
-        Diagnose saveDiagnose = diagnoseService.saveDiagnose(resultDto, username);
+        Diagnose saveDiagnose = diagnoseService.saveDiagnose(requestDto, username);
         return new DiagnoseSaveResponseDto(HttpStatus.OK.value(), saveDiagnose.getId(), "피부 진단 결과가 저장되었습니다");
     }
 

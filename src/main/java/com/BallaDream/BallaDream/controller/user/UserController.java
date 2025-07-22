@@ -2,6 +2,7 @@ package com.BallaDream.BallaDream.controller.user;
 
 import com.BallaDream.BallaDream.dto.message.ResponseDto;
 import com.BallaDream.BallaDream.dto.user.JoinMailRequestDto;
+import com.BallaDream.BallaDream.dto.user.UpdateNicknameRequestDto;
 import com.BallaDream.BallaDream.service.user.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -23,7 +24,6 @@ public class UserController {
     @PostMapping("/user")
     public String test() {
         String name = SecurityContextHolder.getContext().getAuthentication().getName();
-//        log.info("name: {}", name);
         return "login user!";
     }
 
@@ -32,6 +32,18 @@ public class UserController {
         return "balladream :) ~^!^~";
     }
 
+    //사용자 닉네임 변경
+    @PreAuthorize("hasRole('USER')")
+    @PutMapping("/user")
+    public ResponseEntity<ResponseDto> updateNickname(@RequestBody @Validated UpdateNicknameRequestDto requestDto) {
+        String username = userService.getUsernameInToken();
+        userService.updateNickname(username, requestDto.getChangeNickname());
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(ResponseDto.of(HttpStatus.OK, "회원의 닉네임이 변경되었습니다."));
+    }
+
+    //사용자 회원 탈퇴
     @PreAuthorize("hasRole('USER')")
     @DeleteMapping("/user")
     public ResponseEntity<ResponseDto> deleteUser() {

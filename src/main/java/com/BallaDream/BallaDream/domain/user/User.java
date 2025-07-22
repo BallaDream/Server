@@ -77,6 +77,10 @@ public class User {
         this.password = password;
     }
 
+    public void changeNickname(String nickname) {
+        this.nickname = nickname;
+    }
+
     public void makeEnable() {
         this.enabled = true;
     }

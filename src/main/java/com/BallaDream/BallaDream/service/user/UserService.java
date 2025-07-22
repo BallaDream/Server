@@ -50,6 +50,15 @@ public class UserService {
         return user.getId();
     }
 
+    //사용자의 닉네임을 수정하기
+    @Transactional
+    public void updateNickname(String username, String changeNickname) {
+        User user = userRepository.findByUsername(username).orElseThrow(
+                () -> new UserException(INVALID_USER));
+        user.changeNickname(changeNickname);
+    }
+
+
     //soft delete: 실제로 삭제X 계정만 비활성화 상태로 전환하기
     @Transactional
     public void softDeleteUser() {

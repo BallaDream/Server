@@ -73,33 +73,6 @@ public class DiagnoseService {
         return new UserDiagnoseResultResponseDto(diagnose.getSpecificUserSkinLevel(), diagnose.getTotalUserSkinLevel());
     }
 
-    /*//단일 진단 결과 조회
-    public UserDiagnoseResultResponseDto getUserDiagnose(Long diagnoseId, String username) {
-        User user = userRepository.findByUsername(username).orElseThrow(
-                () -> new UserException(INVALID_USER));
-
-        List<Diagnose> diagnoseList = diagnoseRepository.findByUser(user); //사용자의 진단 기록 조회
-        boolean isUserDiagnose = false;
-        for (Diagnose diagnose : diagnoseList) {
-            if (Objects.equals(diagnose.getId(), diagnoseId)) {
-                isUserDiagnose = true;
-                break;
-            }
-        }
-        //열람하고자 하는 기록이 사용자의 진단 기록이 아닌 경우
-        if (!isUserDiagnose) {
-            throw new DiagnoseOwnershipException();
-        }
-
-        List<UserSkinLevel> skinLevelList = levelRepository.findByDiagnoseId(diagnoseId);
-        Map<DiagnoseType, Level> result = new HashMap<>();
-        for (UserSkinLevel skinLevel : skinLevelList) {
-            result.put(skinLevel.getDiagnoseType(), skinLevel.getLevel());
-        }
-
-        return new UserDiagnoseResultResponseDto(result);
-    }*/
-
     //최근 진단 결과 조회
     public MyPageDiagnoseResponseDto getLatestDiagnose(Long userId) {
 
