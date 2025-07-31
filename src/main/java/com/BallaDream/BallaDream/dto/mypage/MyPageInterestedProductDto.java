@@ -12,6 +12,7 @@ import java.util.List;
 public class MyPageInterestedProductDto {
     private Long productId;
     private String productName;
+    private String formulation;
     private int price;
     private String salesLink;
     private String imageLink;

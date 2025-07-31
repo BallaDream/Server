@@ -78,8 +78,8 @@ public class InterestedProductService {
     public MyPageInterestedProductResponseDto getUserInterestedProducts(int page, Long userId) {
         User user = userRepository.findById(userId).orElseThrow(
                 () -> new UserException(INVALID_USER));
-        PageRequest pageRequest = PageRequest.of(page, 9, Sort.by(Sort.Direction.DESC, "date"));
-        Page<InterestedProduct> result = interestedProductRepository.findByUserId(userId, pageRequest);
+        PageRequest pageRequest = PageRequest.of(page, 9, Sort.by(Sort.Direction.DESC, "date")); //최신순
+        Page<InterestedProduct> result = interestedProductRepository.findByUserId(userId, pageRequest); //페이징
         List<InterestedProduct> content = result.getContent();
 
         //사용자 관심 상품 & 성분 & 진단 종류를 가져오기
@@ -90,6 +90,7 @@ public class InterestedProductService {
                     .productName(product.getProductName())
                     .price(product.getPrice())
                     .productId(product.getId())
+                    .formulation(product.getFormulation())
                     .element(product.getProductElements())
                     .imageLink(product.getImageLink())
                     .salesLink(product.getSalesLink())
