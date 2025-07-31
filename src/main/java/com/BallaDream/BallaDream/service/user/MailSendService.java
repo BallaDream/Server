@@ -73,10 +73,31 @@ public class MailSendService {
         String setFrom = emailId; // email-config에 설정한 자신의 이메일 주소를 입력
         String toMail = username; //이메일을 받는 유저
         String title = "회원 가입 인증 이메일 입니다."; // 이메일 제목
-        String content =
-                "balladream 을 방문해주셔서 감사합니다." + 	//html 형식으로 작성
-                        "<br><br>" +
-                        "인증 번호는 " + authNumber + " 입니다.";
+        String content = """
+        <div style="font-family: 'Apple SD Gothic Neo', 'Noto Sans KR', 'Malgun Gothic', '맑은 고딕', sans-serif; background-color: #f8f9fa; padding: 24px;">
+            <div style="max-width: 600px; margin: 0 auto; background-color: #ffffff; padding: 32px 24px; border-radius: 10px; border: 1px solid #eee; box-shadow: 0 2px 8px rgba(0,0,0,0.05);">
+                <hr style="background-color: #162A6C; height: 2px; border: none; margin-bottom: 16px;" />
+                <img src="https://balladream.shop/img/logo.png" alt="BallaDream 로고" style="width: 60px; margin-bottom: 16px;" />
+                <h2 style="font-size: 20px; color: #162A6C; margin-bottom: 8px;">이메일 인증번호</h2>
+                <p style="font-size: 15px; line-height: 1.6; color: #555;">
+                    BallaDream 가입을 위해 이메일 인증을 진행합니다.<br/>
+                    아래의 인증번호를 입력해 주세요.
+                </p>
+                <div style="margin: 32px 0; text-align: center;">
+                    <div style="display: inline-block; padding: 16px 32px; background-color: #162A6C; color: white; font-size: 28px; font-weight: bold; border-radius: 8px; letter-spacing: 4px;">
+                        %s
+                    </div>
+                </div>
+                <p style="font-size: 14px; color: #999;">
+                    본 이메일은 회원가입을 위해 요청된 인증 메일입니다. 인증번호는 5분간 유효하며, 타인과 공유하지 마세요.
+                </p>
+                <hr style="background-color: #162A6C; height: 2px; border: none; margin-top: 24px;" />
+            </div>
+            <p style="margin-top: 16px; font-size: 12px; color: #ccc; text-align: center;">
+                © 2025 BallaDream. All rights reserved.
+            </p>
+        </div>
+        """.formatted(authNumber);
         mailSend(setFrom, toMail, title, content);
         setAuthNumberInRedis(toMail, authNumber); //5분동안 인증번호 정보 저장
         return Integer.toString(authNumber);

@@ -81,17 +81,6 @@ public class DiagnoseService {
             throw new DiagnoseNotFoundException();
         }
 
-        /*List<UserSkinLevel> skinLevelList = levelRepository.findByDiagnoseId(diagnose.getId());
-        if (skinLevelList.isEmpty()) {
-            throw new DiagnoseNotFoundException();
-        }*/
-
-        // DiagnosisType과 Level을 Map으로 매핑
-        /*Map<DiagnoseType, Level> dataMap = skinLevelList.stream()
-                .collect(Collectors.toMap(
-                        UserSkinLevel::getDiagnoseType,
-                        UserSkinLevel::getLevel));*/
-
         return new MyPageDiagnoseResponseDto(diagnose.getId(), diagnose.getDate(), diagnose.getTotalUserSkinLevel());
     }
 
@@ -127,40 +116,8 @@ public class DiagnoseService {
     }
 
     //피부 진단 결과 삭제하기
+    @Transactional
     public void deleteDiagnose(Long diagnoseId, Long userId) {
         diagnoseRepository.deleteByIdAndUserId(diagnoseId, userId);
     }
-
-    //피부 진단 점수에 따른 진단 결과
-
-
-    /*private List<UserAllDiagnoseDto> mapToUserAllDiagnoseDto(List<UserAllDiagnoseQueryDto> queryDtos) {
-        return queryDtos.stream()
-                // diagnoseId + date 기준으로 그룹핑
-                .collect(Collectors.groupingBy(dto ->
-                        new DiagnoseKey(dto.getDiagnoseId(), dto.getDate())))
-                .entrySet().stream()
-                .map(entry -> {
-                    DiagnoseKey key = entry.getKey();
-                    Map<DiagnoseType, Level> resultMap = entry.getValue().stream()
-                            .collect(Collectors.toMap(
-                                    UserAllDiagnoseQueryDto::getDiagnoseType,
-                                    UserAllDiagnoseQueryDto::getLevel
-                            ));
-
-                    return UserAllDiagnoseDto.builder()
-                            .diagnoseId(key.diagnoseId())
-                            .diagnoseDate(key.diagnoseDate())
-                            .diagnoseResult(resultMap)
-                            .build();
-
-                })
-                .toList();
-    }
-
-    private record DiagnoseKey(
-            Long diagnoseId,
-            LocalDate diagnoseDate
-    ) {}*/
-
 }
