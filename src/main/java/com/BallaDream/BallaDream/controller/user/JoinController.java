@@ -3,7 +3,7 @@ package com.BallaDream.BallaDream.controller.user;
 import com.BallaDream.BallaDream.dto.message.ResponseDto;
 import com.BallaDream.BallaDream.dto.user.AuthNumberCheckRequestDto;
 import com.BallaDream.BallaDream.dto.user.JoinRequestDto;
-import com.BallaDream.BallaDream.dto.user.JoinMailRequestDto;
+import com.BallaDream.BallaDream.dto.user.MailRequestDto;
 import com.BallaDream.BallaDream.service.user.JoinService;
 import com.BallaDream.BallaDream.service.user.MailSendService;
 import com.BallaDream.BallaDream.service.user.UserService;
@@ -16,6 +16,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import static com.BallaDream.BallaDream.constants.EmailAuthNumberType.*;
+
 @Slf4j
 @RestController
 @RequiredArgsConstructor
@@ -27,8 +29,8 @@ public class JoinController {
 
     //이메일 인증 번호 전송
     @PostMapping("/verify-email")
-    public ResponseEntity<ResponseDto> mailSendForJoin(@RequestBody @Validated JoinMailRequestDto mailDto) {
-        mailService.joinEmail(mailDto.getUsername()); //사용자에게 메일 전송
+    public ResponseEntity<ResponseDto> mailSendForJoin(@RequestBody @Validated MailRequestDto mailDto) {
+        mailService.mailSendByType(mailDto.getUsername(), mailDto.getAuthNumberType()); //사용자에게 메일 전송
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(ResponseDto.of(HttpStatus.OK, "인증번호를 전송하였습니다"));

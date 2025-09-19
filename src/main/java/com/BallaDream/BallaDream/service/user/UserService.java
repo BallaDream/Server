@@ -1,14 +1,15 @@
 package com.BallaDream.BallaDream.service.user;
 
 import com.BallaDream.BallaDream.common.RedisUtil;
-import com.BallaDream.BallaDream.domain.enums.Action;
 import com.BallaDream.BallaDream.domain.enums.LoginType;
 import com.BallaDream.BallaDream.domain.user.User;
+import com.BallaDream.BallaDream.exception.user.InvalidMailAuthNumException;
 import com.BallaDream.BallaDream.exception.user.UserException;
 import com.BallaDream.BallaDream.repository.user.UserRepository;
 import com.BallaDream.BallaDream.service.log.LogService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -25,7 +26,9 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final LogService logService;
+    private final MailSendService mailSendService;
     private final RedisUtil redisUtil;
+    private final BCryptPasswordEncoder bCryptPasswordEncoder; //비밀번호 암호화
 
     //security holder에 임시 저장된 사용자 정보를 반환한다.
     public String getUsernameInToken() {
@@ -64,6 +67,19 @@ public class UserService {
     public void softDeleteUser() {
         logService.recordUserLog(getUserId(), "회원이 탈퇴하였습니다.", "UserService", WITHDRAW);
         userRepository.softDeleteUser(getUserId());
+    }
+
+    @Transactional
+    public void updatePassword(String username, String password, String authNum) {
+        User user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new UserException(INVALID_USER));
+
+        boolean isValidAuthNumber = mailSendService.CheckAuthNum(username, authNum);
+        if (isValidAuthNumber) {
+            user.changePassword(bCryptPasswordEncoder.encode(password));
+        } else {
+            throw new InvalidMailAuthNumException();
+        }
     }
 
 

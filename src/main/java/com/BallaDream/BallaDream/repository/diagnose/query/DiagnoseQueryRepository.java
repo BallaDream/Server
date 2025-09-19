@@ -39,9 +39,7 @@ public class DiagnoseQueryRepository {
                         diagnose.date,
                         userSkinLevel.level,
                         userSkinLevel.diagnoseType))
-//                .from(diagnose)
                 .from(userSkinLevel)
-//                .join(userSkinLevel).on(diagnose.id.eq(userSkinLevel.diagnose.id))
                 .join(userSkinLevel.diagnose, diagnose)
                 .where(diagnose.user.id.eq(userId))
                 .fetch();

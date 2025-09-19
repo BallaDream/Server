@@ -93,6 +93,7 @@ public class ProductQueryRepository {
     private BooleanExpression formulationEq(String formulationCond) {
         return formulationCond != null ? product.formulation.eq(formulationCond) : null;
     }
+
     //가격에 대한 검색
     private BooleanExpression priceBetween(Integer minPrice, Integer maxPrice) {
         if (minPrice == null && maxPrice == null) {
