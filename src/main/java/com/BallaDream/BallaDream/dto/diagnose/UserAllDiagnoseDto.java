@@ -17,6 +17,6 @@ import java.util.Map;
 @AllArgsConstructor
 public class UserAllDiagnoseDto {
     private Long diagnoseId;
-    private LocalDateTime diagnoseDate;
+    private String diagnoseDate;
     private Map<DiagnoseType, Level> diagnoseResult = new HashMap<>();
 }

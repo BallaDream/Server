@@ -18,6 +18,8 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 import static com.BallaDream.BallaDream.constants.DiagnoseScore.*;
@@ -94,8 +96,11 @@ public class DiagnoseService {
 
         //dto 만들기
         List<UserAllDiagnoseDto> data = new ArrayList<>();
+
+
         for (Diagnose diagnose : content) {
-            data.add(new UserAllDiagnoseDto(diagnose.getId(), diagnose.getDate(), diagnose.getTotalUserSkinLevel()));
+            LocalDateTime dt = diagnose.getDate();
+            data.add(new UserAllDiagnoseDto(diagnose.getId(), DateUtil.getFormattedDate(diagnose.getDate()), diagnose.getTotalUserSkinLevel()));
         }
 
         return UserAllDiagnoseResponseDto.builder()
