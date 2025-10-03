@@ -8,6 +8,7 @@ import lombok.Builder;
 import lombok.Data;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -16,6 +17,6 @@ import java.util.Map;
 @AllArgsConstructor
 public class UserAllDiagnoseDto {
     private Long diagnoseId;
-    private LocalDate diagnoseDate;
+    private LocalDateTime diagnoseDate;
     private Map<DiagnoseType, Level> diagnoseResult = new HashMap<>();
 }

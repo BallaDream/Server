@@ -9,6 +9,7 @@ import lombok.Builder;
 import lombok.Getter;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -31,7 +32,7 @@ public class Diagnose {
     @JoinColumn(name = "user_id")
     private User user;
 
-    private LocalDate date = LocalDate.now();
+    private LocalDateTime date = LocalDateTime.now();
 
     //각 세부 부위별 진단 결과
     @Enumerated(EnumType.STRING)
@@ -79,7 +80,7 @@ public class Diagnose {
     }
 
     public void createDate() {
-        this.date = LocalDate.now();
+        this.date = LocalDateTime.now();
     }
 
     public void associateUser(User user) {
