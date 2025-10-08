@@ -18,7 +18,7 @@
 
 |                       **장원재**                     
 |:---------------------------------------------------:|
-| <img width="356" height="474" alt="image" src="https://github.com/user-attachments/assets/86b13f6a-c333-4143-ae65-e3fa2beb4694" />| 
+| <img width="200" height="200" alt="image" src="img/wonjae.jpg" />| 
 
 </div>
 
