@@ -16,9 +16,9 @@
 <div align="center">
 
 
-|                       **장원재**                       |                        **정승욱**                        |
-|:---------------------------------------------------:|:-----------------------------------------------------:|
-| <img src="img/wonjae.jpg" width=160px height=200px> | <img src="img/seungjun.png" widht=200px height=200px> |
+|                       **장원재**                     
+|:---------------------------------------------------:|
+| <img width="356" height="474" alt="image" src="https://github.com/user-attachments/assets/86b13f6a-c333-4143-ae65-e3fa2beb4694" />| 
 
 </div>
 
@@ -46,12 +46,10 @@
 
 ## 4. 패키지 구조
 
-### 05.20 기준 도메인형으로 변경!
+- DAO 패턴을 준수하여 [DB] - [Repository] - [Service] - [Controller] 계층으로 구성
 
-- 계층형 방식으로 사용하니 응집성이 너무 없어짐
-- 한 서비스에 너무 많은 클래스가 있는 구조가 더 혼란스럽다고 판단
+<img width="166" height="566" alt="image" src="https://github.com/user-attachments/assets/8bbd23b5-ff02-43a3-9ef0-50476887724d" />
 
-![img.png](img/domainPackage.png)
 .
 
 
